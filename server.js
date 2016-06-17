@@ -10,9 +10,12 @@ var port = process.env.PORT || 8080;
 // Create an express app using an instance of express
 var app = express();
 
+// Tell express to serve the files within the public folder - ie. CSS and JS
+app.use(express.static(__dirname + "/public"));
+
 // Create an express route to the home page
 app.get('/', function(req,res) {
-  res.sendFile(path.join(__dirname + "/index.html"));
+  res.sendFile(path.join(__dirname + "/public" + "/index.html"));
   });
 
 
