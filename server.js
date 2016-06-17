@@ -1,19 +1,20 @@
 // Require the express dependencies to help build routes
 var express = require('express');
+var path = require('path');
 
 // Declaring other variables
 // The var port is set to list to to the port specified in the ENV variable or on 8080
 var port = process.env.PORT || 8080;
 
 
-// Create an express app
+// Create an express app using an instance of express
 var app = express();
-
 
 // Create an express route to the home page
 app.get('/', function(req,res) {
-  res.sendfile('index.html');
-});
+  res.sendFile(path.join(__dirname + "/index.html"));
+  });
+
 
 // Start the server
 app.listen(port);
