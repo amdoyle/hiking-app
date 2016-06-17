@@ -1,0 +1,27 @@
+{
+  "name": "hiking-app",
+  "version": "1.0.0",
+  "description": "The code respository for a community based hiking app.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amdoyle/hiking-app.git"
+  },
+  "keywords": [
+    "node",
+    "mysql",
+    "express",
+    "hiking",
+    "google",
+    "maps"
+  ],
+  "author": "Ann Marie Doyle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amdoyle/hiking-app/issues"
+  },
+  "homepage": "https://github.com/amdoyle/hiking-app#readme"
+}
