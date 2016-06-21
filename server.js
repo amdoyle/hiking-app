@@ -1,6 +1,8 @@
 // Require the express dependencies to help build routes
 var express = require('express');
 var path = require('path');
+var sqlite3 = require('sqlite3').verbose();
+var db = require('./database.js');
 
 // Declaring other variables
 // The var port is set to list to to the port specified in the ENV variable or on 8080

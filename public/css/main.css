@@ -3,7 +3,19 @@ body {
   height: 100vh;
 }
 
+#main-content {
+  float: left;
+  margin: 5%;
+}
+
 #map {
-  height: 50%;
-  width: 50%;
+  height: 500px;
+  width: 100%;
+  padding: 5%;
+  box-sizing: border-box;
+}
+
+aside {
+  float: left;
+  margin: 5%;
 }
