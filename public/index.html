@@ -20,11 +20,36 @@
     </div>
 
     <aside>
+
       <h2>Add a trail</h2>
-      <form action="">
-        <labe>Trail Name</labe>
-        <input type="text">
+      <form name="addTrail" action="POST">
+        <div>
+          <labe for="trail_name">Trail Name</labe>
+          <input type="text" name="trail_name" max="150" min="3">
+        </div>
+        <div>
+          <labe for="lat">Latitude</labe>
+          <input type="text" name="lat">
+        </div>
+        <div>
+          <labe for="long">Longitude</labe>
+          <input type="text" name="long">
+        </div>
+        <div>
+          <labe for="description">Description</labe>
+          <input type="text" name="description">
+        </div>
+        <div>
+          <labe for="review">Review</labe>
+          <input type="text" name="review">
+        </div>
+        <div>
+          <labe for="username">Username</labe>
+          <input type="text" name="username" maxlength="25" min="2">
+        </div>
+        <button type="submit">Submit</button>
       </form>
+
     <aside>
 
   </body>

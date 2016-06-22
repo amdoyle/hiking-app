@@ -31,6 +31,8 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='trail'",
     console.log("SQL Table 'trail' already initialized.");
   }
 });
+
+
 // Declaring other variables
 // The var port is set to list to to the port specified in the ENV variable or on 8080
 var port = process.env.PORT || 8080;
