@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "express": "latest",
-    "sqlite3": "latest"
+    "sqlite3": "latest",
+    "body-parser":"latest"
   },
   "keywords": [
     "node",

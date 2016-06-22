@@ -1,37 +1,32 @@
 // Require the express dependencies to help build routes
 var express = require('express');
 var path = require('path');
+  var bodyParser = require('body-parser')
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('trail.db');
+// var db = new sqlite3.Database('test.db');
 
 // Initializing SQLite3 database
-db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='trail'",
-       function(err, rows) {
-  if(err !== null) {
-    console.log(err);
-  }
-  else if(rows === undefined) {
-    db.run('CREATE TABLE "trail" ' +
-           '("id" INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-           '"trail_name" VARCHAR(150), ' +
-           '"lat" FLOAT,' +
-           '"long" FLOAT,' +
-           '"description" TEXT,' +
-           '"review" TEXT,' +
-           '"username" VARCHAR(25))', function(err) {
-      if(err !== null) {
-        console.log(err);
-      }
-      else {
-        console.log("SQL Table 'trail' initialized.");
-      }
-    });
-  }
-  else {
-    console.log("SQL Table 'trail' already initialized.");
-  }
+db.serialize(function() {
+  db.run("CREATE TABLE IF NOT EXISTS trail (trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
+  //
+  // var stmt = db.prepare("INSERT INTO trail VALUES (?, ?, ?, ?, ?, ?)");
+
+
+  // for(var i = 0; i < 10; i++) {
+  //   stmt.run("something " + i);
+  // }
+  //
+  // stmt.finalize();
+
+  // db.each("SELECT rowid as id, info FROM trail", function(err, row) {
+    // console.log(row.id ": " + row.trail_name);
+  // });
+
+  // db.run("DROP TABLE trail");
 });
 
+// db.close();
 
 // Declaring other variables
 // The var port is set to list to to the port specified in the ENV variable or on 8080
@@ -42,12 +37,65 @@ var port = process.env.PORT || 8080;
 var app = express();
 
 // Tell express to serve the files within the public folder - ie. CSS and JS
+// app.use(express.static(__dirname + "/public"));
+
 app.use(express.static(__dirname + "/public"));
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 // Create an express route to the home page
-app.get('/', function(req,res) {
-  res.sendFile(path.join(__dirname + "/public" + "/index.html"));
+app.get('/trails', function(req,res) {
+  console.log("get");
+  // res.sendFile(path.join(__dirname + "/public" + "/index.html"));
+    db.all("SELECT * FROM trail ORDER BY trail_name;", function(err, rows) {
+      if(err != null) {
+        console.log("error");
+        next(err);
+      } else {
+        console.log(rows);
+          res.sendFile(path.join(__dirname + "/public" + "/index.html"), function(err, html) {
+          // res.send(200, html);
+        });
+      }
+
+      console.log(db.each('SELECT * FROM trail'));
+    });
+});
+
+app.post("/trails", function(req, res, next) {
+  console.log("post");
+
+  var name = req.body.trailName;
+  var lat = req.body.lat;
+  var long = req.body.long;
+  var description = req.body.description;
+  var review = req.body.review;
+  var username = req.body.username;
+
+  console.log(name + " " + lat + " " + long + " " + description + " " + review + " " + username);
+  sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
+               "VALUES ('" + `name` + "', '" + lat + "', '" + long + "', '" + `description`
+               + "', '" + `review` + "', '" + `username` + "')";
+
+
+  db.each(sqlRequest, function(err) {
+    console.log("db function");
+    if(err !== null) {
+      console.log('error');
+      next(err);
+    } else {
+      console.log(trailName + "has been inserted into the db");
+      res.redirect('/');
+    }
   });
+
+  res.redirect('/');
+
+});
 
 
 // Start the server
