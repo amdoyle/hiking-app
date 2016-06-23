@@ -5,57 +5,63 @@ var userLocation;
 var browserSupportFlag = new Boolean();
 var selectedLat;
 var selectedLong;
-
-
+// var marker;
 
 function initialize() {
-  geocoder = new google.maps.Geocoder();
-  var latlng = new google.maps.LatLng()
-
+  // Creating an infoWindow var;
+  var infoWindow;
+  // Creating an instance of a Google Map
   map = new google.maps.Map(document.getElementById('map'), {
       zoom: 8,
       center:userLocation
   });
 
-  if(navigator.geoloation) {
-    browserSupportFlag = true;
+  //Checking in the device support gelocation using the reco HTML 5 version
+  if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      userLocation = new google.maps.LatLng(position.coords.latitude.position.coords.longitude);
-      map.setCenter(userLocation)
-    },
-    function() {
-        handleNoGeolocation(browserSupportFlag);
-      });
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      // set the map center to user's position and add a red marker
+      map.setCenter(pos);
+      addMarker(pos, map);
+    });
   } else {
-    browserSupportFlag = false;
-    handleNoGeolocation(browserSupportFlag);
+    handleNoGeolocation(flase, infoWindow, map.getCenter(), map);
   }
 
-  function handleNoGeolocation(errorFlag) {
-    if(errorFlag == true) {
-      alert("Geolocation server failed.");
-      userLocation = toronto;
-    } else {
-      alert("Oops, we can't find you! Your device doesn't support geolocation. We will start you here, but you can still scroll and find your location manually.");
-      userLocation = toronto;
-    }
-
-    map.setCenter(userLocation);
-
+  function handleNoGeolocation(browserHasGeolocation, infoWindow, pos, map) {
+    // Assigning the infoWindow var and letting the user knwo that their browser
+    // doesn't support this service, and add a red marker
+      infoWindow = new google.maps.InfoWindow({map: map});
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+                            'Error: The Geolocation service failed.' :
+                            'Error: Your browser doesn\'t support geolocation.');
+      addMarker(pos, map);
   }
 
-  var initialLocationMarker = new google.maps.LatLng(userLocation);
-  var marker = new google.maps.Marker({
-    position: userLocation,
-    animation: google.maps.Animation.BOUNCE,
-    map: map,
-    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+  // Add marker function
+  function addMarker(location, map) {
+    var marker = new google.maps.Marker({
+      position: location,
+      animation: google.maps.Animation.BOUNCE,
+      map: map,
+      draggable: true,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    });
+  }
+
+  // Add the event listener to mvoe the red marker
+  google.maps.event.addListener(map, 'click', function(event) {
+    console.log("click");
   });
 
-  lastMarker = marker;
 }
 
 
+//
 google.maps.event.addDomListener(window, 'load', function() {
   // your initialization code goes here.
   initialize();
