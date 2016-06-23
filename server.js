@@ -1,44 +1,22 @@
 // Require the express dependencies to help build routes
 var express = require('express');
 var path = require('path');
-  var bodyParser = require('body-parser')
+var bodyParser = require('body-parser')
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('trail.db');
-// var db = new sqlite3.Database('test.db');
-
-// Initializing SQLite3 database
-db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS trail (trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
-  //
-  // var stmt = db.prepare("INSERT INTO trail VALUES (?, ?, ?, ?, ?, ?)");
-
-
-  // for(var i = 0; i < 10; i++) {
-  //   stmt.run("something " + i);
-  // }
-  //
-  // stmt.finalize();
-
-  // db.each("SELECT rowid as id, info FROM trail", function(err, row) {
-    // console.log(row.id ": " + row.trail_name);
-  // });
-
-  // db.run("DROP TABLE trail");
-});
-
-// db.close();
-
 // Declaring other variables
 // The var port is set to list to to the port specified in the ENV variable or on 8080
 var port = process.env.PORT || 8080;
 
-
 // Create an express app using an instance of express
 var app = express();
 
-// Tell express to serve the files within the public folder - ie. CSS and JS
-// app.use(express.static(__dirname + "/public"));
+// Initializing SQLite3 database
+db.serialize(function() {
+  db.run("CREATE TABLE IF NOT EXISTS trail (trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
+});
 
+// Tell express to serve the files within the public folder - ie. CSS and JS
 app.use(express.static(__dirname + "/public"));
 
 // parse application/x-www-form-urlencoded
@@ -53,8 +31,8 @@ app.get('/trails', function(req,res) {
   // res.sendFile(path.join(__dirname + "/public" + "/index.html"));
     db.all("SELECT * FROM trail ORDER BY trail_name;", function(err, rows) {
       if(err != null) {
-        console.log("error");
-        next(err);
+        console.log(error);
+        // next(err);
       } else {
         console.log(rows);
           res.sendFile(path.join(__dirname + "/public" + "/index.html"), function(err, html) {
@@ -94,11 +72,12 @@ app.post("/trails", function(req, res, next) {
   });
 
   res.redirect('/');
-
+  db.close();
 });
 
 
 // Start the server
-app.listen(port);
-// Console log that the server is started!
-console.log("Magic is happening on port 8080");
+app.listen(port, function() {
+  // Console log that the server is started!
+  console.log("Magic is happening on port 8080");
+});
