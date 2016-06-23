@@ -3,13 +3,18 @@ var map;
 var toronto = new google.maps.LatLng(43.6532, -79.3832);
 var userLocation;
 var browserSupportFlag = new Boolean();
+var selectedLat;
+var selectedLong;
+
+
 
 function initialize() {
   geocoder = new google.maps.Geocoder();
   var latlng = new google.maps.LatLng()
 
   map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 8
+      zoom: 8,
+      center:userLocation
   });
 
   if(navigator.geoloation) {
