@@ -53,8 +53,8 @@ function initialize() {
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });
 
-    $("#lat").val(marker.position.lat().toPrecision(5));
-    $("#long").val(marker.position.lng().toPrecision(5));
+    updateLatLngOnForm(marker);
+
   }
 
 
@@ -68,6 +68,12 @@ function initialize() {
     map.panTo(event.latLng);
 
   });
+
+  // Function to locate the lat and long on the form
+  function updateLatLngOnForm(currentMarker){
+    $("#lat").val(currentMarker.position.lat().toPrecision(5));
+    $("#long").val(currentMarker.position.lng().toPrecision(5));
+  }
 
 }
 
