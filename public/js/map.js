@@ -52,17 +52,11 @@ function initialize() {
       draggable: true,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });
+
+    $("#lat").val(marker.position.lat().toPrecision(5));
+    $("#long").val(marker.position.lng().toPrecision(5));
   }
 
-  function removeMarker(location, map) {
-     marker = new google.maps.Marker({
-      position: location,
-      animation: google.maps.Animation.BOUNCE,
-      map: map,
-      draggable: true,
-      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-    });
-  }
 
   // Add the event listener to mvoe the red marker
   google.maps.event.addListener(map, 'click', function(event) {
@@ -72,6 +66,7 @@ function initialize() {
     addMarker(event.latLng, map);
     // Pan to the new marker to the new marker
     map.panTo(event.latLng);
+
   });
 
 }
