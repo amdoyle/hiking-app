@@ -53,9 +53,22 @@ function initialize() {
     });
   }
 
+  function removeMarker(location) {
+    var marker = new google.maps.Marker({
+      position: location,
+      animation: google.maps.Animation.BOUNCE,
+      map: map,
+      draggable: true,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    });
+  }
+
   // Add the event listener to mvoe the red marker
   google.maps.event.addListener(map, 'click', function(event) {
-    console.log("click");
+    // removeMarker()
+    addMarker(event.latLng, map);
+    map.panTo(event.latLng);
+
   });
 
 }
