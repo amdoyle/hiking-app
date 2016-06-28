@@ -9,6 +9,7 @@ var selectedLong;
 
 function initialize() {
   // Creating an infoWindow var;
+  var marker;
   var infoWindow;
   // Creating an instance of a Google Map
   map = new google.maps.Map(document.getElementById('map'), {
@@ -44,7 +45,7 @@ function initialize() {
 
   // Add marker function
   function addMarker(location, map) {
-    var marker = new google.maps.Marker({
+      marker = new google.maps.Marker({
       position: location,
       animation: google.maps.Animation.BOUNCE,
       map: map,
@@ -53,8 +54,8 @@ function initialize() {
     });
   }
 
-  function removeMarker(location) {
-    var marker = new google.maps.Marker({
+  function removeMarker(location, map) {
+     marker = new google.maps.Marker({
       position: location,
       animation: google.maps.Animation.BOUNCE,
       map: map,
@@ -65,10 +66,12 @@ function initialize() {
 
   // Add the event listener to mvoe the red marker
   google.maps.event.addListener(map, 'click', function(event) {
-    // removeMarker()
+    // Setting the current marker, which is scoped to this function, to null
+    marker.setMap(null);
+    // Adding a new marker at the location where the click occured
     addMarker(event.latLng, map);
+    // Pan to the new marker to the new marker
     map.panTo(event.latLng);
-
   });
 
 }
