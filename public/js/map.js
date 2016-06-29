@@ -3,9 +3,7 @@ var map;
 var toronto = new google.maps.LatLng(43.6532, -79.3832);
 var userLocation;
 var browserSupportFlag = new Boolean();
-var selectedLat;
-var selectedLong;
-// var marker;
+var trails = [];
 
 function initialize() {
   // Creating an infoWindow var;
@@ -57,7 +55,6 @@ function initialize() {
 
   }
 
-
   // Add the event listener to mvoe the red marker
   google.maps.event.addListener(map, 'click', function(event) {
     // Setting the current marker, which is scoped to this function, to null
@@ -66,7 +63,6 @@ function initialize() {
     addMarker(event.latLng, map);
     // Pan to the new marker to the new marker
     map.panTo(event.latLng);
-
   });
 
   // Function to locate the lat and long on the form
@@ -78,8 +74,34 @@ function initialize() {
 }
 
 
-//
+function createTrailMaker(trails){
+
+  var trailArray = $(trails).toArray();
+
+  var addBlueMarker = function(latitude, longitude, map) {
+    var latLng = {lat: latitude, lng: longitude}
+
+    marker = new google.maps.Marker({
+      position: latLng,
+      map: map,
+      draggable: false,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+    });
+
+  }
+
+  for(var i = 0; i < trailArray.length; i++){
+    console.log(trailArray[i].lat);
+    addBlueMarker(trailArray[i].lat, trailArray[i].long, map);
+  }
+
+}
+
 google.maps.event.addDomListener(window, 'load', function() {
-  // your initialization code goes here.
   initialize();
+
+    $.getJSON("/trails", function(data) {
+      createTrailMaker(data);
+    });
+
 });

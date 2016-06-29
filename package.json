@@ -11,9 +11,10 @@
     "url": "git+https://github.com/amdoyle/hiking-app.git"
   },
   "dependencies": {
+    "body-parser": "latest",
+    "ejs": "^2.4.2",
     "express": "latest",
-    "sqlite3": "latest",
-    "body-parser":"latest"
+    "sqlite3": "latest"
   },
   "keywords": [
     "node",
