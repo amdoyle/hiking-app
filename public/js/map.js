@@ -11,7 +11,7 @@ function initialize() {
   var infoWindow;
   // Creating an instance of a Google Map
   map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 8,
+      zoom: 12,
       center:userLocation
   });
 
@@ -78,21 +78,36 @@ function createTrailMaker(trails){
 
   var trailArray = $(trails).toArray();
 
-  var addBlueMarker = function(latitude, longitude, map) {
-    var latLng = {lat: latitude, lng: longitude}
+  var addBlueMarker = function(trail, map) {
+    console.log(trail);
+    var latLng = {lat: trail.lat, lng: trail.long}
+
+    var infoWindow = new google.maps.InfoWindow({
+      content: "<h3 class='-window-title'>" + trail.trail_name + "</h3><br/>" +
+      trail.description +
+      "<h3 class='-window-subheads'>Review:</h3> " + trail.review +
+      "<h3 class='-window-subheads'>Reviewed by user:</h3> " + trail.username
+    });
 
     marker = new google.maps.Marker({
       position: latLng,
       map: map,
       draggable: false,
+      title: trail.trail_name,
       icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+    });
+
+
+    marker.addListener('click', function() {
+      infoWindow.open(map, marker);
     });
 
   }
 
+
   for(var i = 0; i < trailArray.length; i++){
     console.log(trailArray[i].lat);
-    addBlueMarker(trailArray[i].lat, trailArray[i].long, map);
+    addBlueMarker(trailArray[i], map);
   }
 
 }

@@ -56,11 +56,11 @@ app.post("/", function(req, res, next) {
 
 
 // Currently escaping an ' in the statments for a database - will need to look for options that is less hacky
-  var name = req.body.trailName.replace("'","/'");
+  var name = req.body.trailName.replace("'","/");
   var inputLat = req.body.lat;
   var inputLong = req.body.long;
-  var descrip = req.body.description.replace("''","/'");
-  var rev = req.body.review.replace("'","/'");
+  var descrip = req.body.description.replace("''","/");
+  var rev = req.body.review.replace("'","/");
   var user = req.body.username.replace("'","/");
 
   // console.log(name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
