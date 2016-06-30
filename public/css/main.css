@@ -19,3 +19,7 @@ aside {
   float: left;
   margin: 5%;
 }
+
+#search-input {
+  width: 50%;
+}

@@ -71,6 +71,43 @@ function initialize() {
     $("#long").val(currentMarker.position.lng().toPrecision(5));
   }
 
+
+  function initAutocomplete() {
+    var searchInput = document.getElementById("search-input");
+    var searchBox = new google.maps.places.SearchBox(searchInput);
+
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
+    console.log("working");
+    map.addListener('bounds_changed', function() {
+           searchBox.setBounds(map.getBounds());
+    });
+
+    searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+        var location;
+
+          console.log(places);
+
+          places.forEach(function(place) {
+            location = {lat:place.geometry.location.lat() , lng:place.geometry.location.lng() }
+          });
+
+        if (places.length == 0) {
+          return;
+        }
+
+        // remove red marker, so that there is only one on the page
+        marker.setMap(null);
+        // Move marker
+        addMarker(location, map);
+        // Pan to the new marker to the new marker
+        map.panTo(location);
+
+    });
+  }
+
+  initAutocomplete(location, map);
+
 }
 
 
@@ -112,19 +149,10 @@ function createTrailMaker(trails){
 
 }
 
-function initAutocomplete() {
-  var searchInput = document.getElementById("search-input");
-  var searchBox = new google.maps.places.SearchBox(searchInput);
-
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
-  console.log("working");
-}
-
-
 google.maps.event.addDomListener(window, 'load', function() {
 
   initialize();
-  initAutocomplete();
+  // initAutocomplete();
   // using AXAJ to grab the data from the router and pass it to createTrailMaker function
   $.getJSON("/trails", function(data) {
     createTrailMaker(data);

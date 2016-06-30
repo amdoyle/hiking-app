@@ -41,7 +41,6 @@ app.get('/trails', function(req,res) {
         console.log(err);
         // next(err);
       } else {
-        console.log(rows);
 
           res.send(rows);
 
@@ -52,9 +51,6 @@ app.get('/trails', function(req,res) {
 });
 
 app.post("/", function(req, res, next) {
-  console.log("request post");
-
-
 // Currently escaping an ' in the statments for a database - will need to look for options that is less hacky
   var name = req.body.trailName.replace("'","/");
   var inputLat = req.body.lat;
@@ -70,12 +66,11 @@ app.post("/", function(req, res, next) {
 
 
   db.run(sqlRequest, function(err) {
-    console.log("db function");
     if(err)
       console.log('error');
       next(err);
 
-    console.log(name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
+    console.log("New trail input: " + name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
     res.redirect('/');
 
 
