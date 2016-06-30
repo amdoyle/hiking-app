@@ -52,7 +52,6 @@ function initialize() {
     });
 
     updateLatLngOnForm(marker);
-
   }
 
   // Add the event listener to mvoe the red marker
@@ -132,9 +131,14 @@ function createTrailMaker(trails){
     });
 
 
-    // adding an event listener to open the infoWindow on click
-    marker.addListener('click', function() {
+    // adds an event listener to open the infoWindow on click
+    marker.addListener('mouseover', function() {
       infoWindow.open(map, marker);
+    });
+
+    // adds a listener to close the infoWindow when the mouse moves off of it
+    marker.addListener('mouseout', function() {
+      infoWindow.close(map, marker);
     });
 
   }
@@ -152,6 +156,7 @@ $( "#other" ).click(function() {
 });
 
 
+// Event listeners to load the map and markers
 google.maps.event.addDomListener(window, 'load', function() {
 
   initialize();
