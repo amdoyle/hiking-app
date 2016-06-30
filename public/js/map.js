@@ -3,7 +3,7 @@ var map;
 var toronto = new google.maps.LatLng(43.6532, -79.3832);
 var userLocation;
 var browserSupportFlag = new Boolean();
-var trails = [];
+
 
 function initialize() {
   // Creating an infoWindow var;
@@ -112,10 +112,19 @@ function createTrailMaker(trails){
 
 }
 
+function initAutocomplete() {
+  var searchInput = document.getElementById("search-input");
+  var searchBox = new google.maps.places.SearchBox(searchInput);
+
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
+  console.log("working");
+}
+
+
 google.maps.event.addDomListener(window, 'load', function() {
 
   initialize();
-
+  initAutocomplete();
   // using AXAJ to grab the data from the router and pass it to createTrailMaker function
   $.getJSON("/trails", function(data) {
     createTrailMaker(data);
