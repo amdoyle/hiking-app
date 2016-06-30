@@ -77,7 +77,6 @@ function initialize() {
     var searchBox = new google.maps.places.SearchBox(searchInput);
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
-    console.log("working");
     map.addListener('bounds_changed', function() {
            searchBox.setBounds(map.getBounds());
     });
@@ -86,12 +85,10 @@ function initialize() {
         var places = searchBox.getPlaces();
         var location;
 
-          console.log(places);
-
-          places.forEach(function(place) {
-            location = {lat:place.geometry.location.lat() , lng:place.geometry.location.lng() }
-          });
-
+        // places returns an array, but this code will only active with the user enters the auto complete
+        places.forEach(function(place) {
+          location = {lat:place.geometry.location.lat() , lng:place.geometry.location.lng() }
+        });
         if (places.length == 0) {
           return;
         }

@@ -3,11 +3,6 @@ body {
   height: 100vh;
 }
 
-#main-content {
-  float: left;
-  margin: 5%;
-}
-
 #map {
   height: 500px;
   width: 100%;
@@ -15,11 +10,22 @@ body {
   box-sizing: border-box;
 }
 
-aside {
-  float: left;
-  margin: 5%;
-}
 
 #search-input {
   width: 50%;
+  height: 1em;
+  padding: 2%;
+}
+
+.body-content h2 {
+  font-size: 1.5em;
+}
+
+.body-content input {
+  border: 1px solid #000;
+  margin: 1% 0;
+}
+
+.jumbotron {
+  padding-left: 5%;
 }
