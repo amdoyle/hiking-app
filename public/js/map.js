@@ -75,11 +75,11 @@ function initialize() {
 
 
 function createTrailMaker(trails){
-
+  //Turning the JSON object from the model to an array
   var trailArray = $(trails).toArray();
 
+  // This function adds a yellow marker and the infoWindow for each trail
   var addBlueMarker = function(trail, map) {
-    console.log(trail);
     var latLng = {lat: trail.lat, lng: trail.long}
 
     var infoWindow = new google.maps.InfoWindow({
@@ -98,25 +98,27 @@ function createTrailMaker(trails){
     });
 
 
+    // adding an event listener to open the infoWindow on click
     marker.addListener('click', function() {
       infoWindow.open(map, marker);
     });
 
   }
 
-
+  // Loop through the array and call addBlueMaker function for each trail in the array
   for(var i = 0; i < trailArray.length; i++){
-    console.log(trailArray[i].lat);
     addBlueMarker(trailArray[i], map);
   }
 
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
+
   initialize();
 
-    $.getJSON("/trails", function(data) {
-      createTrailMaker(data);
-    });
+  // using AXAJ to grab the data from the router and pass it to createTrailMaker function
+  $.getJSON("/trails", function(data) {
+    createTrailMaker(data);
+  });
 
 });
