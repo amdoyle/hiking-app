@@ -146,6 +146,12 @@ function createTrailMaker(trails){
 
 }
 
+// Allows users to submit the Add Trail form but hitting ender
+$( "#other" ).click(function() {
+  $( "#add-trail" ).submit();
+});
+
+
 google.maps.event.addDomListener(window, 'load', function() {
 
   initialize();
