@@ -155,6 +155,7 @@ $( "#other" ).click(function() {
   $( "#add-trail" ).submit();
 });
 
+// Submitting the form through ajax
 $(function(){
   $('form').on('submit', function(event) {
     event.preventDefault();
@@ -165,12 +166,12 @@ $(function(){
       type: 'POST', url: '/', data: trailData
     }).done(function(data){
       form.trigger('reset');
-        // initialize();
-        // initAutocomplete();
         // using AXAJ to grab the data from the router and pass it to createTrailMaker function
         $.getJSON("/trails", function(data) {
           createTrailMaker(data);
         });
+
+        $('#search-input').val('');
 
       });
   });

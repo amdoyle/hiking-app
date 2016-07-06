@@ -55,3 +55,7 @@ body {
   width: 75%;
   float: right;
 }
+
+#lat-field, #lng-field {
+  display: none;
+}
