@@ -2,8 +2,8 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-// var ejs = require('ejs');
 var sqlite3 = require('sqlite3').verbose();
+var validator = require('validator');
 var db = new sqlite3.Database('trail.db');
 var trails = [];
 // Declaring other variables
@@ -34,7 +34,6 @@ app.get("/", function(req, res) {
 });
 
 app.get('/trails', function(req,res) {
-  console.log("get");
   // res.sendFile(path.join(__dirname + "/public" + "/index.html"));
     db.all("SELECT * FROM trail ORDER BY trail_name;", function(err, rows) {
       if(err != null) {
@@ -52,12 +51,13 @@ app.get('/trails', function(req,res) {
 
 app.post("/", function(req, res, next) {
 // Currently escaping an ' in the statments for a database - will need to look for options that is less hacky
-  var name = req.body.trailName.replace("'","/");
+  // if(!validation.)
+  var name = escape(req.body.trailName);
   var inputLat = req.body.lat;
   var inputLong = req.body.long;
-  var descrip = req.body.description.replace("''","/");
-  var rev = req.body.review.replace("'","/");
-  var user = req.body.username.replace("'","/");
+  var descrip = escape(req.body.description);
+  var rev = escape(req.body.review);
+  var user = escape(req.body.username);
 
   // console.log(name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
   sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
@@ -75,9 +75,9 @@ app.post("/", function(req, res, next) {
 
 
   });
-  // db.close();
 });
 
+// db.close();
 
 // Start the server
 app.listen(port, function() {

@@ -14,7 +14,8 @@
     "body-parser": "latest",
     "ejs": "^2.4.2",
     "express": "latest",
-    "sqlite3": "latest"
+    "sqlite3": "latest",
+    "validator": "5.4.0"
   },
   "keywords": [
     "node",

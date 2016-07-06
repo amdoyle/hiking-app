@@ -56,9 +56,9 @@ body {
   float: right;
 }
 
-#lat-field, #lng-field {
+/*#lat-field, #lng-field {
   display: none;
-}
+}*/
 
 button.submit-btn {
   margin-top: 2%;
