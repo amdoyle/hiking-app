@@ -52,10 +52,16 @@ body {
 }
 
 #add-trail input {
-  width: 75%;
+  width: 65%;
   float: right;
 }
 
 #lat-field, #lng-field {
   display: none;
+}
+
+button.submit-btn {
+  margin-top: 2%;
+  margin-left: 50%;
+  margin-right: 50%;
 }
