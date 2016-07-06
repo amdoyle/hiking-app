@@ -155,6 +155,27 @@ $( "#other" ).click(function() {
   $( "#add-trail" ).submit();
 });
 
+$(function(){
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    var form = $(this);
+    var trailData = form.serialize();
+
+    $.ajax({
+      type: 'POST', url: '/', data: trailData
+    }).done(function(data){
+      form.trigger('reset');
+        // initialize();
+        // initAutocomplete();
+        // using AXAJ to grab the data from the router and pass it to createTrailMaker function
+        $.getJSON("/trails", function(data) {
+          createTrailMaker(data);
+        });
+
+      });
+  });
+});
+
 
 // Event listeners to load the map and markers
 google.maps.event.addDomListener(window, 'load', function() {
