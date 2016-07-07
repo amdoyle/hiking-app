@@ -41,7 +41,26 @@ app.get('/trails', function(req,res) {
         // next(err);
       } else {
 
-          res.send(rows);
+        var unencodedRow;
+        var unencodedRows = [];
+        // Looping through each item and unecoding the none alpha/numerica characters
+        for(var row in rows) {
+          unescape(rows[row].trail_name);
+          unencodedRow =  {
+            trail_name: unescape(rows[row].trail_name),
+            description: unescape(rows[row].description),
+            review: unescape(rows[row].review),
+            username: unescape(rows[row].username),
+            lat: rows[row].lat,
+            long: rows[row].long
+          }
+          //Each row will be push in to the new array
+          unencodedRows.push(unencodedRow);
+
+        }
+
+        // Sending the unencoded array to the view
+        res.send(unencodedRows);
 
       }
 
