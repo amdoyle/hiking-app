@@ -84,3 +84,11 @@ button.submit-btn {
 .trails {
   margin: 2vh 0;
 }
+
+.invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+
+.invalid:focus {
+  outline: none;
+}

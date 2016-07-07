@@ -10,8 +10,9 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWhUx90YlDmrsZA_Ov3oRskef1dQQY2w8&libraries=places"></script>
-    <script src="js/map.js"></script>
     <script type="text/javascript" src="bower_components/validator-js/validator.min.js"></script>
+    <script src="js/map.js"></script>
+
   </head>
 
   <body>
@@ -32,7 +33,15 @@
     <div class="col-sm-12 col-md-4">
 
       <h2>Add a trail</h2>
-      <form id="add-trail" name="/" action="/" method="post"  enctype="application/x-www-form-urlencoded">
+      <div>
+        <ul>
+          <li class="errors-blank" aria-live="polite" ></li>
+          <li class="errors-type" aria-live="polite" ></li>
+          <li class="errors-user" aria-live="polite" ></li>
+        </ul>
+      </div>
+      <form id="add-trail" name="/" action="/" method="post"
+      onsubmit="return formValidation()" enctype="application/x-www-form-urlencoded" novalidate>
         <div>
           <label for="trailName">Trail Name</label>
           <input type="text" name="trailName" max="150" min="3" id="trailName">
@@ -47,15 +56,15 @@
         </div>
         <div>
           <label for="description">Description</label>
-          <input type="text" name="description">
+          <input type="text" name="description" id="description">
         </div>
         <div>
           <label for="review">Review</label>
-          <input type="text" name="review">
+          <input type="text" name="review" id="review">
         </div>
         <div>
           <label for="username">Username</label>
-          <input type="text" name="username" maxlength="25" min="2">
+          <input type="text" name="username" maxlength="25" min="2" id="user">
         </div>
         <divs>
           <button type="submit" class="btn submit-btn">Submit</button>

@@ -69,13 +69,14 @@ app.get('/trails', function(req,res) {
 });
 
 app.post("/", function(req, res, next) {
-  var name = escape(req.body.trailName);
-  var inputLat = req.body.lat;
-  var inputLong = req.body.long;
-  var descrip = escape(req.body.description);
-  var rev = escape(req.body.review);
-  var user = req.body.username;
-    if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev) &&validator.isFloat(inputLat) && validator.isFloat(inputLat))  {
+  var name = escape(validator.trim(req.body.trailName));
+  var inputLat = validator.trim(req.body.lat);
+  var inputLong = validator.trim(req.body.long);
+  var descrip = escape(validator.trim(req.body.description));
+  var rev = escape(validator.trim(req.body.review));
+  var user = validator.trim(req.body.username);
+    if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev)
+    && validator.isFloat(inputLat) && validator.isFloat(inputLat) && !validator.isNull(user, name, descrip, rev, inputLong, inputLat))  {
 
       console.log("this works");
       sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
