@@ -169,6 +169,7 @@ $(function(){
         // using AXAJ to grab the data from the router and pass it to createTrailMaker function
         $.getJSON("/trails", function(data) {
           createTrailMaker(data);
+          // $("#trails-near-you").appendTo(data);
         });
 
         $('#search-input').val('');
@@ -186,6 +187,8 @@ google.maps.event.addDomListener(window, 'load', function() {
   // using AXAJ to grab the data from the router and pass it to createTrailMaker function
   $.getJSON("/trails", function(data) {
     createTrailMaker(data);
+    // $(data).appendTo($("#trails-near-you"));
+
   });
 
 });

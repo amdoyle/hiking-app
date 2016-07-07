@@ -17,10 +17,26 @@ body {
 .clearfix { display: block; }
 /* close commented backslash hack */
 
+.banner {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,0+100;White+to+Transparent */
+  background: linear-gradient(135deg, rgba(255,255,255,0.75) 0%,rgba(255,255,255,0) 100%), url("../images/IMG_0696.jpg") no-repeat center/140vw auto; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: -moz-linear-gradient(-45deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 100%), url("../images/IMG_0696.jpg") no-repeat center/140vw auto;/* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, rgba(255,255,255,0.75) 0%,rgba(255,255,255,0) 100%), url("../images/IMG_0696.jpg") no-repeat center/140vw auto;/* Chrome10-25,Safari5.1-6 */
+}
+
+.jumbotron {
+  margin: 0;
+}
+
+.banner h1, p {
+  color: rgb(12, 28, 115);
+  padding: 1vh 5vw;
+}
+
 #map {
   height: 500px;
   width: 100%;
-  padding: 5%;
+  padding: 2vh 0;
   box-sizing: border-box;
 }
 
@@ -31,8 +47,14 @@ body {
   padding: 2%;
 }
 
+.body-content {
+  width: 90vw;
+  margin: 5% 5vw;
+}
+
 .body-content h2 {
-  font-size: 1.5em;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .body-content input {
@@ -40,9 +62,6 @@ body {
   margin: 1% 0;
 }
 
-.jumbotron {
-  padding-left: 5%;
-}
 
 #add-trail label {
   text-align: right;
@@ -56,12 +75,12 @@ body {
   float: right;
 }
 
-/*#lat-field, #lng-field {
-  display: none;
-}*/
-
 button.submit-btn {
   margin-top: 2%;
   margin-left: 50%;
   margin-right: 50%;
+}
+
+.trails {
+  margin: 2vh 0;
 }
