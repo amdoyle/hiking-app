@@ -51,30 +51,35 @@ app.get('/trails', function(req,res) {
 
 app.post("/", function(req, res, next) {
 // Currently escaping an ' in the statments for a database - will need to look for options that is less hacky
-  // if(!validation.)
   var name = escape(req.body.trailName);
   var inputLat = req.body.lat;
   var inputLong = req.body.long;
   var descrip = escape(req.body.description);
   var rev = escape(req.body.review);
-  var user = escape(req.body.username);
+  var user = req.body.username;
+    if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev) &&validator.isFloat(inputLat) && validator.isFloat(inputLat))  {
 
-  // console.log(name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
-  sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
-               "VALUES ('" + name + "', '" + inputLat + "', '" + inputLong + "', '" + descrip
-               + "', '" + rev + "', '" + user + "')";
-
-
-  db.run(sqlRequest, function(err) {
-    if(err)
-      console.log('error');
-      next(err);
-
-    console.log("New trail input: " + name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
-    res.redirect('/');
+      console.log("this works");
+      sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
+      "VALUES ('" + name + "', '" + inputLat + "', '" + inputLong + "', '" + descrip
+      + "', '" + rev + "', '" + user + "')";
 
 
-  });
+      db.run(sqlRequest, function(err) {
+        if(err)
+          console.log('error');
+          next(err);
+
+          console.log("New trail input: " + name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
+          res.redirect('/');
+
+      });
+
+    } else {
+      // res.send("rejected");
+      console.log("rejected")
+    }
+
 });
 
 // db.close();
