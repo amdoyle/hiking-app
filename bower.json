@@ -1,0 +1,28 @@
+{
+  "name": "hiking-app",
+  "description": "The code respository for a community based hiking app.",
+  "main": "server.js",
+  "authors": [
+    "Ann Marie Doyle"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "mysql",
+    "express",
+    "hiking",
+    "google",
+    "maps"
+  ],
+  "homepage": "https://github.com/amdoyle/hiking-app",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "validator-js": "^5.4.0"
+  }
+}
