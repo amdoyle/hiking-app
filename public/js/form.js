@@ -58,7 +58,7 @@ function formValidation(){
       if(!validator.isFloat(latInput)) {
         $('#lat').addClass("invalid");
       } else {
-        $('#lat').removeClass("invalid");;
+        $('#lat').removeClass("invalid");
       }
 
     } else {
@@ -74,6 +74,11 @@ function formValidation(){
       errorUsers.innerHTML = "";
     }
 
+    if(!validator.isNull(trailName) && !validator.isNull(review) && !validator.isNull(description)
+     && !validator.isNull(user) && !validator.isNull(latInput) && !validator.isNull(longInput) && validator.isFloat(latInput) && validator.isFloat(longInput)){
+      return true;
+    }
+
 }
 
 // Submitting the form through ajax
@@ -82,28 +87,56 @@ $(function(){
     event.preventDefault();
     var form = $(this);
     var trailData = form.serialize();
+    // checking if front end validations are returning ture before AJAX call is started
+    if(formValidation() === true){
+      $.ajax({
+        type: 'POST',
+        url: '/',
+        data: trailData,
+        success: function(trailData){
+          form.trigger('reset');
+            // using AXAJ to grab the data from the router and pass it to createTrailMaker function
+            $.getJSON("/trails", function(data) {
+              createTrailMaker(data);
+              $("#trails-near-you").html(data);
+              console.log(data);
+            });
 
-    $.ajax({
-      type: 'POST', url: '/', data: trailData
-    }).done(function(data){
-      form.trigger('reset');
-        // using AXAJ to grab the data from the router and pass it to createTrailMaker function
-        $.getJSON("/trails", function(data) {
-          createTrailMaker(data);
-          $("#trails-near-you").html(data);
-          console.log(data);
+        },
+        error: function(textStatus, err) {
+           alert('text status '+textStatus+', err '+err)
+        }
+      // }).done(function(data){
+        // form.trigger('reset');
+        //   // using AXAJ to grab the data from the router and pass it to createTrailMaker function
+        //   $.getJSON("/trails", function(data) {
+        //     createTrailMaker(data);
+        //     $("#trails-near-you").html(data);
+        //     console.log(data);
+        //
+        //   });
+
+          // if(data == error){
+          //   // $('#notification').addClass('has-error'); // add the error class to show red input
+          //   $('#notification').html('<p> There was an error please try again</p>'); // add the actual error message under our input
+          // } else {
+          //
+          //     // ALL GOOD! just show the success message!
+          //     $('#notification').html('<p>your trail was saved</p>');
+          //
+          //
+          // }
+          //
+          // $('#search-input').val('');
+          // $('#trailName').removeClass("invalid");
+          // $('#review').removeClass("invalid");
+          // $('#description').removeClass("invalid");
+          // $('#lat').removeClass("invalid");
+          // $('#long').removeClass("invalid");
+          // $('#user').removeClass("invalid");
 
         });
-
-        $('#search-input').val('');
-        $('#trailName').removeClass("invalid");
-        $('#review').removeClass("invalid");
-        $('#description').removeClass("invalid");
-        $('#lat').removeClass("invalid");
-        $('#long').removeClass("invalid");
-        $('#user').removeClass("invalid");
-
-      });
+    }
   });
 });
 

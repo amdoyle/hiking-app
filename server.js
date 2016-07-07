@@ -45,7 +45,6 @@ app.get('/trails', function(req,res) {
         var unencodedRows = [];
         // Looping through each item and unecoding the none alpha/numerica characters
         for(var row in rows) {
-          unescape(rows[row].trail_name);
           unencodedRow =  {
             trail_name: unescape(rows[row].trail_name),
             description: unescape(rows[row].description),
@@ -75,29 +74,31 @@ app.post("/", function(req, res, next) {
   var descrip = escape(validator.trim(req.body.description));
   var rev = escape(validator.trim(req.body.review));
   var user = validator.trim(req.body.username);
-    if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev)
-    && validator.isFloat(inputLat) && validator.isFloat(inputLat) && !validator.isNull(user, name, descrip, rev, inputLong, inputLat))  {
 
-      console.log("this works");
-      sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
-      "VALUES ('" + name + "', '" + inputLat + "', '" + inputLong + "', '" + descrip
-      + "', '" + rev + "', '" + user + "')";
+  if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev)
+  && validator.isFloat(inputLat) && validator.isFloat(inputLat) &&
+  !validator.isNull(user, name, descrip, rev, inputLong, inputLat))  {
+
+    var sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
+                     "VALUES ('" + name + "', '" + inputLat + "', '" + inputLong + "', '" + descrip
+                     + "', '" + rev + "', '" + user + "')";
 
 
-      db.run(sqlRequest, function(err) {
-        if(err)
-          console.log('error');
-          next(err);
+    db.run(sqlRequest, function(err) {
+      if(err)
+        console.log(err);
+        // next(err);
+        res.send(err)
 
-          console.log("New trail input: " + name + " " + inputLat + " " + inputLong + " " + descrip + " " + rev + " " + user);
-          res.redirect('/');
 
-      });
 
-    } else {
-      // res.send("rejected");
-      console.log("rejected")
-    }
+       res.send("Success your trail has been saved");
+       console.log("New trail input: " + name + " " + inputLat + " " + inputLong
+       + " " + descrip + " " + rev + " " + user);
+       console.log("sucess");
+    });
+
+  }
 
 });
 
