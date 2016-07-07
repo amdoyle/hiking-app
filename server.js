@@ -50,7 +50,6 @@ app.get('/trails', function(req,res) {
 });
 
 app.post("/", function(req, res, next) {
-// Currently escaping an ' in the statments for a database - will need to look for options that is less hacky
   var name = escape(req.body.trailName);
   var inputLat = req.body.lat;
   var inputLong = req.body.long;
