@@ -146,6 +146,7 @@ function createTrailMaker(trails){
   // Loop through the array and call addBlueMaker function for each trail in the array
   for(var i = 0; i < trailArray.length; i++){
     addBlueMarker(trailArray[i], map);
+    $('<li>'+trails[i].trail_name+'</li>').appendTo("#trails-near-you");
   }
 
 }
@@ -159,9 +160,6 @@ google.maps.event.addDomListener(window, 'load', function() {
   // using AXAJ to grab the data from the router and pass it to createTrailMaker function
   $.getJSON("/trails", function(data) {
     createTrailMaker(data);
-    $("#trails-near-you").html(data);
-    console.log(data);
-
   });
 
 });

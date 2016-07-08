@@ -101,40 +101,28 @@ $(function(){
               $("#trails-near-you").html(data);
             });
            $('#notification-success').html(data.toUpperCase() + ": " + textStatus.trail_name +" add.");
+               console.log(data +" "+ textStatus.trail_name +" add.");
         },
         error: function(textStatus, data) {
          $('#notification-error').html(data.toUpperCase() + ": " + textStatus.responseJSON);
         }
-      // }).done(function(data){
-        // form.trigger('reset');
-        //   // using AXAJ to grab the data from the router and pass it to createTrailMaker function
-        //   $.getJSON("/trails", function(data) {
-        //     createTrailMaker(data);
-        //     $("#trails-near-you").html(data);
-        //     console.log(data);
-        //
-        //   });
+      }).done(function(data){
+          form.trigger('reset');
+            // using AXAJ to grab the data from the router and pass it to createTrailMaker function
+            $.getJSON("/trails", function(data) {
+              createTrailMaker(data);
+              listTrails(data);
+            });
 
-          // if(data == error){
-          //   // $('#notification').addClass('has-error'); // add the error class to show red input
-          //   $('#notification').html('<p> There was an error please try again</p>'); // add the actual error message under our input
-          // } else {
-          //
-          //     // ALL GOOD! just show the success message!
-          //     $('#notification').html('<p>your trail was saved</p>');
-          //
-          //
-          // }
-          //
-          // $('#search-input').val('');
-          // $('#trailName').removeClass("invalid");
-          // $('#review').removeClass("invalid");
-          // $('#description').removeClass("invalid");
-          // $('#lat').removeClass("invalid");
-          // $('#long').removeClass("invalid");
-          // $('#user').removeClass("invalid");
+            $('#search-input').val('');
+            $('#trailName').removeClass("invalid");
+            $('#review').removeClass("invalid");
+            $('#description').removeClass("invalid");
+            $('#lat').removeClass("invalid");
+            $('#long').removeClass("invalid");
+            $('#user').removeClass("invalid");
 
-        });
+          });
     }
   });
 });
