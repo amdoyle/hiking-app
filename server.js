@@ -24,7 +24,8 @@ db.serialize(function() {
 app.use(express.static(__dirname + "/public"));
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.urlencoded({ extended: false }))
+var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 
 // parse application/json
 app.use(bodyParser.json())
@@ -67,37 +68,52 @@ app.get('/trails', function(req,res) {
     });
 });
 
-app.post("/", function(req, res, next) {
-  var name = escape(validator.trim(req.body.trailName));
+app.post("/", parseUrlencoded, function(req, res, next) {
+  // validations
+  // var name = escape(validator.trim(req.body.trailName));
+  var name = req.body.trailName;
   var inputLat = validator.trim(req.body.lat);
   var inputLong = validator.trim(req.body.long);
   var descrip = escape(validator.trim(req.body.description));
   var rev = escape(validator.trim(req.body.review));
   var user = validator.trim(req.body.username);
 
+
+  //setting the object to be returned
+  var newtrail = {
+    trail_name: name,
+    description: descrip,
+    review: rev,
+    username: user,
+    lat: inputLat,
+    long: inputLong
+  }
+
+  //  Checking to ensure that all paramaters meet the validations before saving
   if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev)
   && validator.isFloat(inputLat) && validator.isFloat(inputLat) &&
   !validator.isNull(user, name, descrip, rev, inputLong, inputLat))  {
-
+    // SQL statment to input the info
     var sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
                      "VALUES ('" + name + "', '" + inputLat + "', '" + inputLong + "', '" + descrip
                      + "', '" + rev + "', '" + user + "')";
 
-
+    // telling the database to run the statment
     db.run(sqlRequest, function(err) {
-      if(err)
+      if(err){
         console.log(err);
-        // next(err);
-        res.send(err)
+        next(err);
+          res.status(400).json("Sorry, something went wrong. Please try again.");
+      }
 
 
+      //  res.send("Success your trail has been saved");
+      res.status(201).json(newtrail);
 
-       res.send("Success your trail has been saved");
-       console.log("New trail input: " + name + " " + inputLat + " " + inputLong
-       + " " + descrip + " " + rev + " " + user);
-       console.log("sucess");
     });
 
+  } else {
+    res.status(400).json('Invalid input. Please try again.');
   }
 
 });

@@ -103,8 +103,10 @@ $(function(){
             });
 
         },
-        error: function(textStatus, err) {
-           alert('text status '+textStatus+', err '+err)
+        error: function(textStatus, data) {
+          //  alert('text status '+textStatus+', err '+err)
+         $('#notification').addClass('has-error');
+         $('#notification').html(data.toUpperCase() + ": " + textStatus.responseJSON);
         }
       // }).done(function(data){
         // form.trigger('reset');
