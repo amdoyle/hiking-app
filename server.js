@@ -69,9 +69,8 @@ app.get('/trails', function(req,res) {
 });
 
 app.post("/", parseUrlencoded, function(req, res, next) {
-  // validations
-  // var name = escape(validator.trim(req.body.trailName));
-  var name = req.body.trailName;
+  // Escaping harmful characters
+  var name = escape(validator.trim(req.body.trailName));
   var inputLat = validator.trim(req.body.lat);
   var inputLong = validator.trim(req.body.long);
   var descrip = escape(validator.trim(req.body.description));

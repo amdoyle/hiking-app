@@ -93,20 +93,17 @@ $(function(){
         type: 'POST',
         url: '/',
         data: trailData,
-        success: function(trailData){
+        success: function(textStatus, data){
           form.trigger('reset');
             // using AXAJ to grab the data from the router and pass it to createTrailMaker function
             $.getJSON("/trails", function(data) {
               createTrailMaker(data);
               $("#trails-near-you").html(data);
-              console.log(data);
             });
-
+           $('#notification-success').html(data.toUpperCase() + ": " + textStatus.trail_name +" add.");
         },
         error: function(textStatus, data) {
-          //  alert('text status '+textStatus+', err '+err)
-         $('#notification').addClass('has-error');
-         $('#notification').html(data.toUpperCase() + ": " + textStatus.responseJSON);
+         $('#notification-error').html(data.toUpperCase() + ": " + textStatus.responseJSON);
         }
       // }).done(function(data){
         // form.trigger('reset');
