@@ -75,7 +75,7 @@ function initialize() {
     var searchInput = document.getElementById("search-input");
     var searchBox = new google.maps.places.SearchBox(searchInput);
 
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
+    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
     map.addListener('bounds_changed', function() {
            searchBox.setBounds(map.getBounds());
     });

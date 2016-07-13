@@ -110,3 +110,8 @@ button.submit-btn {
   float:left;
   display: block;
 }
+
+input#search-input {
+  position: relative;
+  left: 0;
+}

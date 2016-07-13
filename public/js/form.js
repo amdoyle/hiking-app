@@ -1,6 +1,6 @@
 // Front in validation for form
 function formValidation(){
-  var trailName = validator.trim(document.forms["add-trail"]["trailName"].value);
+  var trailName = validator.trim((document.forms["add-trail"]["search-input"].value).split(',')[0]);
   var review = validator.trim(document.forms["add-trail"]["review"].value);
   var description = validator.trim(document.forms["add-trail"]["description"].value);
   var user = validator.trim(document.forms["add-trail"]["username"].value);
@@ -111,11 +111,10 @@ $(function(){
             // using AXAJ to grab the data from the router and pass it to createTrailMaker function
             $.getJSON("/trails", function(data) {
               createTrailMaker(data);
-              listTrails(data);
             });
 
-            $('#search-input').val('');
-            $('#trailName').removeClass("invalid");
+
+            $('#search-input').removeClass("invalid").val('');
             $('#review').removeClass("invalid");
             $('#description').removeClass("invalid");
             $('#lat').removeClass("invalid");

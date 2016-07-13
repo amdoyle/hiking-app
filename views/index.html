@@ -30,7 +30,7 @@
       <div id="notification-error"></div>
       <div id="notification-success"></div>
       <div id="map-search" class="col-sm-12 col-md-8">
-        <input id="search-input" class="controls" type="text" placeholder="Search">
+        <!-- <input id="search-input" class="controls" type="text" placeholder="Search"> -->
         <div id="map"></div>
       </div>
 
@@ -51,7 +51,8 @@
         onsubmit="return formValidation()" enctype="application/x-www-form-urlencoded" novalidate>
           <div>
             <label for="trailName">Trail Name</label>
-            <input type="text" name="trailName" max="150" min="3" id="trailName">
+            <!-- <input type="text" name="trailName" max="150" min="3" id="trailName" placeholder="Enter Trail"> -->
+            <input name="trailName" id="search-input" max="150" min="3" class="controls" type="text" placeholder="Enter Trail">
           </div>
           <div id="lat-field">
             <label for="lat">Latitude</label>
@@ -89,7 +90,7 @@
           </div>
           <div>
             <label for="new_location">Enter Location:</label>
-            <input type="text" name="new_location" >
+            <input name="new_location" id="search-input" class="controls" type="text" placeholder="Enter Location">
           </div>
           <div>
             <button type="submit" class="btn submit-btn">Submit</button>
