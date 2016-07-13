@@ -62,6 +62,9 @@ body {
   margin: 1% 0;
 }
 
+.class {
+  display: none;
+}
 
 #add-trail label {
   text-align: right;
@@ -91,4 +94,18 @@ button.submit-btn {
 
 .invalid:focus {
   outline: none;
+}
+
+#right {
+  display: inline-block;
+  float: right;
+}
+
+#left {
+  display: inline-block;
+  float: left;
+}
+
+.errors {
+  display: block;
 }
