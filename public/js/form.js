@@ -131,3 +131,18 @@ $(function(){
 $( "#other" ).click(function() {
   $( "#add-trail" ).submit();
 });
+
+// New syntax for $(document).on("ready", function(){});
+$(function() {
+  $("#add-trail").hide();
+
+  $("#right").on("click", function() {
+    $("#find").show();
+    $("#add-trail").hide();
+  });
+
+  $("#left").on("click", function() {
+    $("#add-trail").hide();
+    $("#find").show();
+  });
+});

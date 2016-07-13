@@ -36,45 +36,66 @@
 
     <div class="col-sm-12 col-md-4">
 
-      <h2>Add a trail</h2>
-      <div>
+      <h2 id="right">Add a trail</h2>
+      <h2 id="left">Find a Trail</h2>
+
         <ul>
           <li class="errors-blank" aria-live="polite" ></li>
           <li class="errors-type" aria-live="polite" ></li>
           <li class="errors-user" aria-live="polite" ></li>
         </ul>
+      <div>
+        <form id="add-trail" name="/" action="/" method="post"
+        onsubmit="return formValidation()" enctype="application/x-www-form-urlencoded" novalidate>
+          <div>
+            <label for="trailName">Trail Name</label>
+            <input type="text" name="trailName" max="150" min="3" id="trailName">
+          </div>
+          <div id="lat-field">
+            <label for="lat">Latitude</label>
+            <input type="text" name="lat" id="lat">
+          </div>
+          <div id="lng-field">
+            <label for="long">Longitude</label>
+            <input type="text" name="long" id="long">
+          </div>
+          <div>
+            <label for="description">Description</label>
+            <input type="text" name="description" id="description">
+          </div>
+          <div>
+            <label for="review">Review</label>
+            <input type="text" name="review" id="review">
+          </div>
+          <div>
+            <label for="username">Username</label>
+            <input type="text" name="username" maxlength="25" min="2" id="user">
+          </div>
+          <div>
+            <button type="submit" class="btn submit-btn">Submit</button>
+         </div>
+        </form>
       </div>
-      <form id="add-trail" name="/" action="/" method="post"
-      onsubmit="return formValidation()" enctype="application/x-www-form-urlencoded" novalidate>
-        <div>
-          <label for="trailName">Trail Name</label>
-          <input type="text" name="trailName" max="150" min="3" id="trailName">
-        </div>
-        <div id="lat-field">
-          <label for="lat">Latitude</label>
-          <input type="text" name="lat" id="lat">
-        </div>
-        <div id="lng-field">
-          <label for="long">Longitude</label>
-          <input type="text" name="long" id="long">
-        </div>
-        <div>
-          <label for="description">Description</label>
-          <input type="text" name="description" id="description">
-        </div>
-        <div>
-          <label for="review">Review</label>
-          <input type="text" name="review" id="review">
-        </div>
-        <div>
-          <label for="username">Username</label>
-          <input type="text" name="username" maxlength="25" min="2" id="user">
-        </div>
-        <divs>
-          <button type="submit" class="btn submit-btn">Submit</button>
-          <div id="other"></div>
-       </div>
-      </form>
+
+    <div id="find">
+        <form action="/find" name="/" action="/" method="post"
+        enctype="application/x-www-form-urlencoded" novalidate>
+          <div>
+            <label for="current">User Current Location:</label>
+            <input type="radio" name="current" value="true">Yes
+            <input type="radio" name="current" value="false" default>No
+          </div>
+          <div>
+            <label for="new_location">Enter Location:</label>
+            <input type="text" name="new_location" >
+          </div>
+          <div>
+            <button type="submit" class="btn submit-btn">Submit</button>
+         </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
       <div class="col-sm-12 trails">
         <h2>Trails Near You</h2>
@@ -86,7 +107,6 @@
         </div>
       </div>
 
-    </div>
 
 
   </body>
