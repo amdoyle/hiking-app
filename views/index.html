@@ -36,8 +36,10 @@
 
     <div class="col-sm-12 col-md-4">
 
-      <h2 id="right">Add a trail</h2>
-      <h2 id="left">Find a Trail</h2>
+      <div id="form-btn">
+        <h2 id="right">Add a trail</h2>
+        <h2 id="left">Find a Trail</h2>
+      </div>
 
         <div class="clearfix errors">
           <ul>
@@ -51,8 +53,7 @@
         onsubmit="return formValidation()" enctype="application/x-www-form-urlencoded" novalidate>
           <div>
             <label for="trailName">Trail Name</label>
-            <!-- <input type="text" name="trailName" max="150" min="3" id="trailName" placeholder="Enter Trail"> -->
-            <input name="trailName" id="search-input" max="150" min="3" class="controls" type="text" placeholder="Enter Trail">
+            <input name="trailName" class="search-input" max="150" min="3" class="controls" type="text" placeholder="Enter Trail">
           </div>
           <div id="lat-field">
             <label for="lat">Latitude</label>
@@ -80,17 +81,18 @@
         </form>
       </div>
 
-    <div id="find" class="clearfix">
-        <form action="/find" name="/" action="/" method="post"
+    <div>
+        <form id="find" class="clearfix" action="/find" name="/" action="/" method="post"
         enctype="application/x-www-form-urlencoded" novalidate>
           <div>
             <label for="current">User Current Location:</label>
-            <input type="radio" name="current" value="true" checked>Yes
-            <input type="radio" name="current" value="false">No
+            <input class="radio-btn" type="radio" name="current" value="true" checked><span class="input-label">Yes</span>
+            <input  class="radio-btn" type="radio" name="current" value="false"><span class="input-label">No</span>
           </div>
           <div>
             <label for="new_location">Enter Location:</label>
-            <input name="new_location" id="search-input" class="controls" type="text" placeholder="Enter Location">
+            <input name="new_location" class="search-input" class="controls" type="text" placeholder="Enter Location">
+            <!-- <input name="trailName" id="search-input" max="150" min="3" class="controls" type="text" placeholder="Enter Trail"> -->
           </div>
           <div>
             <button type="submit" class="btn submit-btn">Submit</button>

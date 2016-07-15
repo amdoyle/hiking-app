@@ -72,38 +72,48 @@ function initialize() {
 
 
   function initAutocomplete() {
-    var searchInput = document.getElementById("search-input");
+    var searchInput = document.getElementsByClassName("search-input")[1];
     var searchBox = new google.maps.places.SearchBox(searchInput);
 
-    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
+    var newTrail = document.getElementsByClassName("search-input")[0];
+    var newTrailSearch = new google.maps.places.SearchBox(newTrail);
+
+    function placeFind(places, location) {
+      places.forEach(function(place) {
+        location = {lat:place.geometry.location.lat() , lng:place.geometry.location.lng() }
+      });
+      if (places.length == 0) {
+        return;
+      }
+
+      // remove red marker, so that there is only one on the page
+      marker.setMap(null);
+      // Move marker
+      addMarker(location, map);
+      // Pan to the new marker to the new marker
+      map.panTo(location);
+    }
+
     map.addListener('bounds_changed', function() {
+           newTrailSearch.setBounds(map.getBounds());
            searchBox.setBounds(map.getBounds());
+    });
+
+    newTrailSearch.addListener('places_changed', function() {
+      var places = newTrailSearch.getPlaces();
+      var location;
+      placeFind(places, location);
     });
 
     searchBox.addListener('places_changed', function() {
         var places = searchBox.getPlaces();
         var location;
-
-        // places returns an array, but this code will only active with the user enters the auto complete
-        places.forEach(function(place) {
-          location = {lat:place.geometry.location.lat() , lng:place.geometry.location.lng() }
-        });
-        if (places.length == 0) {
-          return;
-        }
-
-        // remove red marker, so that there is only one on the page
-        marker.setMap(null);
-        // Move marker
-        addMarker(location, map);
-        // Pan to the new marker to the new marker
-        map.panTo(location);
-
+        placeFind(places, location);
     });
-  }
+
+}
 
   initAutocomplete(location, map);
-
 }
 
 
@@ -152,6 +162,7 @@ function createTrailMaker(trails){
 }
 
 
+
 // Event listeners to load the map and markers
 google.maps.event.addDomListener(window, 'load', function() {
 
@@ -161,5 +172,7 @@ google.maps.event.addDomListener(window, 'load', function() {
   $.getJSON("/trails", function(data) {
     createTrailMaker(data);
   });
+
+
 
 });

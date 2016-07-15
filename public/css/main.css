@@ -66,16 +66,26 @@ body {
   display: none;
 }
 
-#add-trail label {
+#add-trail label, #find label {
   text-align: right;
   display: inline-block;
   float: left;
   clear: both;
 }
 
-#add-trail input {
+#add-trail input, #find input {
   width: 65%;
   float: right;
+}
+
+#find input.radio-btn {
+  width: 61%;
+}
+
+.input-label {
+  float: right;
+  /*padding-right: 2%;*/
+  padding-left: 2%;
 }
 
 button.submit-btn {
@@ -114,4 +124,10 @@ button.submit-btn {
 input#search-input {
   position: relative;
   left: 0;
+}
+
+@media screen and (min-width: 1000px) {
+  #find input.radio-btn {
+    width: 18%;
+  }
 }
