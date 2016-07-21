@@ -8,6 +8,8 @@ var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
 var db = new sqlite3.Database('./trail.db');
+// var geocoder = require('geocoder');
+
 
 
 db.serialize(function() {
@@ -95,14 +97,59 @@ router.route('/trails')
             unencodedRows.push(unencodedRow);
 
           }
+          // console.log(unencodedRows);
           // Sending the unencoded array to the view
           res.send(unencodedRows);
 
         }
       });
-  })
-  .post(function(req, res) {
+  });
 
+router.route('/find')
+  .get(function(req, res){
+
+    var address;
+    var latIput;
+    var lngInput;
+    var distance;
+
+
+      latInput = req.query.latInput;
+      lngInput = req.query.lngInput;
+      distance = req.query.distance;
+
+
+    db.all("SELECT trail_name, lat, long, abs(lat - (" + latInput +")) AND abs(long - (" + lngInput +")) as distanceAway FROM trail WHERE abs(lat - (" + latInput +")) < "+ distance +" AND abs(long - (" + lngInput +")) < " + distance +" ORDER BY distanceAway;", function(err, rows) {
+      if(err != null) {
+        console.log(err);
+        // next(err);
+      } else {
+        var unencodedRow;
+        var unencodedRows = [];
+        // Looping through each item and unecoding the none alpha/numerica characters
+        for(var row in rows) {
+          unencodedRow =  {
+            trail_name: unescape(rows[row].trail_name),
+            description: unescape(rows[row].description),
+            review: unescape(rows[row].review),
+            username: unescape(rows[row].username),
+            lat: rows[row].lat,
+            long: rows[row].long
+          }
+          console.log(unencodedRow);
+          //Each row will be push in to the new array
+          unencodedRows.push(unencodedRow);
+
+        }
+            console.log(unencodedRows);
+        // Sending the unencoded array to the view
+        res.send(unencodedRows);
+
+
+      }
   })
+  });
+
+
 
 module.exports = router;

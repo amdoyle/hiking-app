@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/main.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWhUx90YlDmrsZA_Ov3oRskef1dQQY2w8&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA94XjFCQuzEaXfEoL8-KshyX5e_65MmCM&libraries=places"></script>
     <script type="text/javascript" src="bower_components/validator-js/validator.min.js"></script>
     <script src="js/map.js"></script>
     <script src="js/form.js"></script>
@@ -82,20 +82,27 @@
       </div>
 
     <div>
-        <form id="find" class="clearfix" action="/find" name="/" action="/" method="post"
-        enctype="application/x-www-form-urlencoded" novalidate>
+        <form id="find" class="clearfix" action="/find" name="/" action="/" method="get"
+        onsubmit="return findForm()" enctype="application/x-www-form-urlencoded" novalidate>
+
           <div>
             <label for="current">User Current Location:</label>
-            <input class="radio-btn" type="radio" name="current" value="true" checked><span class="input-label">Yes</span>
-            <input  class="radio-btn" type="radio" name="current" value="false"><span class="input-label">No</span>
+            <input class="radio-btn" type="radio" name="current" value=true checked><span class="input-label">Yes</span>
+            <input  class="radio-btn" type="radio" name="current" value=false><span class="input-label">No</span>
+          </div>
+          <div>
+            <label for="distance">Distance</label>
+            <input class="radio-btn" type="radio" name="distance" value="0.10" checked><span class="input-label">10 km</span>
+            <input  class="radio-btn" type="radio" name="distance" value="0.20"><span class="input-label">20 km</span>
+            <input class="radio-btn" type="radio" name="distance" value="0.50" checked><span class="input-label">50 km</span>
+            <input  class="radio-btn" type="radio" name="distance" value="1.00"><span class="input-label">100 km</span>
           </div>
           <div>
             <label for="new_location">Enter Location:</label>
             <input name="new_location" class="search-input" class="controls" type="text" placeholder="Enter Location">
-            <!-- <input name="trailName" id="search-input" max="150" min="3" class="controls" type="text" placeholder="Enter Trail"> -->
           </div>
           <div>
-            <button type="submit" class="btn submit-btn">Submit</button>
+            <button type="search" class="btn submit-btn">Search</button>
          </div>
         </form>
       </div>

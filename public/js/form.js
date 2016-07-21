@@ -1,6 +1,7 @@
-// Front in validation for form
+// Front end validation for form
+
 function formValidation(){
-  var trailName = validator.trim((document.forms["add-trail"]["search-input"].value).split(',')[0]);
+  var trailName = validator.trim((document.forms["add-trail"]["trailName"].value).split(',')[0]);
   var review = validator.trim(document.forms["add-trail"]["review"].value);
   var description = validator.trim(document.forms["add-trail"]["description"].value);
   var user = validator.trim(document.forms["add-trail"]["username"].value);
@@ -81,9 +82,70 @@ function formValidation(){
 
 }
 
+function findForm() {
+//   // console.log(document.forms["find"]["current"].value);
+//   console.log(document.forms["add-trail"]["lat"].value);
+//   console.log(document.forms["add-trail"]["long"].value);
+}
+
+function geocode(){
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({address: document.forms["find"]["new_location"].value}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      findLat = results[0].geometry.location.lat();
+      findLng = results[0].geometry.location.lat();
+      return "latInput=" + findLat + "&" + "lngInput=" + findLng;
+
+    }
+  })
+}
+
+
+$(function(){
+  var form;
+  var location;
+  var findLat;
+  var findLng;
+  $('#find').on('submit', function(event) {
+    event.preventDefault();
+    (function getLocation() {
+        if(document.forms["find"]["current"].value === "true"){
+          return location = "latInput="+document.forms["add-trail"]["lat"].value + "&" + "lngInput="
+                            + document.forms["add-trail"]["long"].value + "&" + "distance="+ document.forms["find"]["distance"].value ;
+        }else {
+          // return geocode();
+          var geocoder = new google.maps.Geocoder();
+          geocoder.geocode({address: document.forms["find"]["new_location"].value}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              findLat = results[0].geometry.location.lat();
+              findLng = results[0].geometry.location.lat();
+              location = "latInput=" + findLat + "&" + "lngInput=" + findLng + "distance="+ document.forms["find"]["distance"].value;
+              // console.log("in if " + location);
+              return location;
+              }
+            });
+            // console.log(location)
+          // location = form.serialize();
+        }
+      })();
+
+    $.ajax({
+      type: 'GET',
+      url: '/find',
+      data: location
+    }).done(function(data){
+      // $.getJSON("/find", function(data) {
+      //         console.log(data);
+      //   $("#trails-near-you").html("something");
+        // console.log(data);
+      // });
+    })
+  });
+});
+
 // Submitting the form through ajax
 $(function(){
-  $('form').on('submit', function(event) {
+  $('#add-trail').on('submit', function(event) {
     event.preventDefault();
     var form = $(this);
     var trailData = form.serialize();

@@ -74,7 +74,7 @@ body {
 }
 
 #add-trail input, #find input {
-  width: 65%;
+  width: 68%;
   float: right;
 }
 
@@ -129,5 +129,15 @@ input#search-input {
 @media screen and (min-width: 1000px) {
   #find input.radio-btn {
     width: 18%;
+  }
+
+  #add-trail input {
+    width: 64%;
+  }
+}
+
+@media screen  and (min-width: 1350px) {
+  #find input.radio-btn {
+    width: 15%;
   }
 }

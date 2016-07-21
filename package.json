@@ -19,7 +19,7 @@
   },
   "keywords": [
     "node",
-    "mysql",
+    "sqlite",
     "express",
     "hiking",
     "google",

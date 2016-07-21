@@ -1,4 +1,3 @@
-var geocoder;
 var map;
 var toronto = new google.maps.LatLng(43.6532, -79.3832);
 var userLocation;
@@ -43,6 +42,7 @@ function initialize() {
 
   // Add marker function
   function addMarker(location, map) {
+    console.log(location)
       marker = new google.maps.Marker({
       position: location,
       animation: google.maps.Animation.BOUNCE,
