@@ -132,23 +132,12 @@ $(function(){
       url: '/find',
       data: location,
       success: function(data, textStatus){
-
-          updateTrailMarkers(data);
-          // console.log(dataHTML);
-          // $("#trails-near-you").html(JSON.stringify(data));
-        // $("#trails-near-you").html(dataHTML);
-
+          createTrailMaker(data);
       },
       error: function(textStatus, data){
        $('#notification-error').html(data.toUpperCase() + ": " + textStatus.responseJSON);
       }
     }).done(function(data){
-      // $.getJSON("/find", function(data) {
-      //   createTrailMaker(data);
-      //   $("#trails-near-you").html(data);
-      // });
-      // console.log("done?")
-
     });
   });
 });

@@ -13,7 +13,7 @@ var db = new sqlite3.Database('./trail.db');
 
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF  NOT EXISTS trail (trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
       // db.close();
   // db.run("DROP TABLE trail");
 });
@@ -86,6 +86,7 @@ router.route('/trails')
           // Looping through each item and unecoding the none alpha/numerica characters
           for(var row in rows) {
             unencodedRow =  {
+              id: rows[row].id,
               trail_name: unescape(rows[row].trail_name),
               description: unescape(rows[row].description),
               review: unescape(rows[row].review),
@@ -97,7 +98,7 @@ router.route('/trails')
             unencodedRows.push(unencodedRow);
 
           }
-          // console.log(unencodedRows);
+          console.log(unencodedRows);
           // Sending the unencoded array to the view
           res.send(unencodedRows);
 
@@ -105,6 +106,24 @@ router.route('/trails')
       });
   });
 
+router.route('/trails/:trail')
+  .get(function(req, res) {
+    var trail = req.params.trail;
+    console.log(trail);
+
+    db.get("SELECT trail_name, id FROM trail WHERE id = " + trail + ";", function(err,row) {
+      if(err != null) {
+        console.log(err);
+        // next(err);
+      } else {
+        var unencodedRow = {
+          trail_name: unescape(row.trail_name),
+        }
+      }
+
+      res.send(unencodedRow);
+    });
+  })
 router.route('/find')
   .get(function(req, res){
 

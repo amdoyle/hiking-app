@@ -159,7 +159,7 @@ function createTrailMaker(trails){
   // Loop through the array and call addBlueMaker function for each trail in the array
     for(var i = 0; i < trailArray.length; i++){
       addBlueMarker(trailArray[i], map);
-      $('<li>'+trails[i].trail_name+'</li>').appendTo("#trails-near-you");
+      $('<li><a href="/trails/'+trailArray[i].id+'">'+trails[i].trail_name+'</a></li>').appendTo("#trails-near-you");
     }
 
 
