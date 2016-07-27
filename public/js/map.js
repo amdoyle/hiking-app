@@ -120,24 +120,23 @@ function initialize() {
 function createTrailMaker(trails){
   //Turning the JSON object from the model to an array
   var trailArray = $(trails).toArray();
-
   // This function adds a yellow marker and the infoWindow for each trail
   var addBlueMarker = function(trail, map) {
     var latLng = {lat: trail.lat, lng: trail.long}
+
+    var marker = new google.maps.Marker({
+      position: latLng,
+      map: map,
+      draggable: false,
+      title: trail.trail_name,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+    });
 
     var infoWindow = new google.maps.InfoWindow({
       content: "<h3 class='-window-title'>" + trail.trail_name + "</h3><br/>" +
       trail.description +
       "<h3 class='-window-subheads'>Review:</h3> " + trail.review +
       "<h3 class='-window-subheads'>Reviewed by user:</h3> " + trail.username
-    });
-
-    marker = new google.maps.Marker({
-      position: latLng,
-      map: map,
-      draggable: false,
-      title: trail.trail_name,
-      icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
     });
 
 
@@ -151,8 +150,12 @@ function createTrailMaker(trails){
       infoWindow.close(map, marker);
     });
 
-  }
+    }
+
+    // clearing out div
     $("#trails-near-you").html("");
+
+
   // Loop through the array and call addBlueMaker function for each trail in the array
     for(var i = 0; i < trailArray.length; i++){
       addBlueMarker(trailArray[i], map);

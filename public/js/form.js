@@ -133,7 +133,7 @@ $(function(){
       data: location,
       success: function(data, textStatus){
 
-          createTrailMaker(data);
+          updateTrailMarkers(data);
           // console.log(dataHTML);
           // $("#trails-near-you").html(JSON.stringify(data));
         // $("#trails-near-you").html(dataHTML);
