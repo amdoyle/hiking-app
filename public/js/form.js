@@ -100,7 +100,7 @@ function geocode(){
   })
 }
 
-
+// Ajax call to the find route
 $(function(){
   var form;
   var location;
@@ -161,8 +161,8 @@ $(function(){
               createTrailMaker(data);
               $("#trails-near-you").html(data);
             });
-           $('#notification-success').html(data.toUpperCase() + ": " + textStatus.trail_name +" add.");
-               console.log(data +" "+ textStatus.trail_name +" add.");
+           $('#notification-success').html(data.toUpperCase() + ": " + unescape(textStatus.trail_name) +" add.");
+               console.log(data +" "+ unescape(textStatus.trail_name) +" add.");
         },
         error: function(textStatus, data) {
          $('#notification-error').html(data.toUpperCase() + ": " + textStatus.responseJSON);

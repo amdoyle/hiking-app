@@ -59,9 +59,8 @@ router.route('/')
             res.status(400).json("Sorry, something went wrong. Please try again.");
         }
 
-
-        //  res.send("Success your trail has been saved");
         res.status(201).json(newtrail);
+        console.log(newtrail);
 
       });
 
