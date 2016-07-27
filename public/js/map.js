@@ -152,12 +152,13 @@ function createTrailMaker(trails){
     });
 
   }
-
+    $("#trails-near-you").html("");
   // Loop through the array and call addBlueMaker function for each trail in the array
-  for(var i = 0; i < trailArray.length; i++){
-    addBlueMarker(trailArray[i], map);
-    $('<li>'+trails[i].trail_name+'</li>').appendTo("#trails-near-you");
-  }
+    for(var i = 0; i < trailArray.length; i++){
+      addBlueMarker(trailArray[i], map);
+      $('<li>'+trails[i].trail_name+'</li>').appendTo("#trails-near-you");
+    }
+
 
 }
 

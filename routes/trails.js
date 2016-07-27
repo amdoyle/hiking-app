@@ -108,8 +108,7 @@ router.route('/trails')
 router.route('/find')
   .get(function(req, res){
 
-    var address;
-    var latIput;
+    var latInput;
     var lngInput;
     var distance;
 
@@ -118,8 +117,7 @@ router.route('/find')
       lngInput = req.query.lngInput;
       distance = req.query.distance;
 
-
-    db.all("SELECT trail_name, lat, long, abs(lat - (" + latInput +")) AND abs(long - (" + lngInput +")) as distanceAway FROM trail WHERE abs(lat - (" + latInput +")) < "+ distance +" AND abs(long - (" + lngInput +")) < " + distance +" ORDER BY distanceAway;", function(err, rows) {
+    db.all("SELECT trail_name, lat, long FROM trail WHERE abs(lat - (" + latInput +")) < "+ distance +" AND abs(long - (" + lngInput +")) < " + distance +" ORDER BY abs(lat - (" + latInput +")), abs(long - (" + lngInput +"));", function(err, rows) {
       if(err != null) {
         console.log(err);
         // next(err);
@@ -130,20 +128,21 @@ router.route('/find')
         for(var row in rows) {
           unencodedRow =  {
             trail_name: unescape(rows[row].trail_name),
-            description: unescape(rows[row].description),
-            review: unescape(rows[row].review),
-            username: unescape(rows[row].username),
+            // distance: rows[row].distanceAway,
             lat: rows[row].lat,
-            long: rows[row].long
+            long: rows[row].long,
           }
-          console.log(unencodedRow);
+
+
+          // console.log(distanceAway);
           //Each row will be push in to the new array
           unencodedRows.push(unencodedRow);
 
         }
-            console.log(unencodedRows);
         // Sending the unencoded array to the view
-        res.send(unencodedRows);
+        // console.log(unencodedRows)
+        // res.send(unencodedRows);
+          res.status(201).json(unencodedRows);
 
 
       }

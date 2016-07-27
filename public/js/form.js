@@ -118,28 +118,38 @@ $(function(){
           geocoder.geocode({address: document.forms["find"]["new_location"].value}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
               findLat = results[0].geometry.location.lat();
-              findLng = results[0].geometry.location.lat();
-              location = "latInput=" + findLat + "&" + "lngInput=" + findLng + "distance="+ document.forms["find"]["distance"].value;
-              // console.log("in if " + location);
+              findLng = results[0].geometry.location.lng();
+              console.log(findLat +" " + findLng)
+              location = "latInput=" + findLat + "&" + "lngInput=" + findLng + "&distance="+ document.forms["find"]["distance"].value;
               return location;
               }
             });
-            // console.log(location)
-          // location = form.serialize();
         }
       })();
 
     $.ajax({
       type: 'GET',
       url: '/find',
-      data: location
+      data: location,
+      success: function(data, textStatus){
+
+          createTrailMaker(data);
+          // console.log(dataHTML);
+          // $("#trails-near-you").html(JSON.stringify(data));
+        // $("#trails-near-you").html(dataHTML);
+
+      },
+      error: function(textStatus, data){
+       $('#notification-error').html(data.toUpperCase() + ": " + textStatus.responseJSON);
+      }
     }).done(function(data){
       // $.getJSON("/find", function(data) {
-      //         console.log(data);
-      //   $("#trails-near-you").html("something");
-        // console.log(data);
+      //   createTrailMaker(data);
+      //   $("#trails-near-you").html(data);
       // });
-    })
+      // console.log("done?")
+
+    });
   });
 });
 
