@@ -3,7 +3,6 @@ var path = require('path');
 var router = express.Router();
 var fs = require('fs');
 var bodyParser = require('body-parser');
-// parse application/x-www-form-urlencoded
 var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
@@ -123,7 +122,7 @@ router.route('/trails/:trail')
 
       res.send(unencodedRow);
     });
-  })
+  });
 router.route('/find')
   .get(function(req, res){
 
