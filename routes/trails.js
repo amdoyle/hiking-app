@@ -1,4 +1,5 @@
 var express = require('express');
+var app = express();
 var path = require('path');
 var router = express.Router();
 var fs = require('fs');
@@ -7,12 +8,14 @@ var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
 var db = new sqlite3.Database('./trail.db');
+var passport = require('../config.js');
 // var geocoder = require('geocoder');
 
 
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
+  db.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, email TEXT)");
       // db.close();
   // db.run("DROP TABLE trail");
 });
@@ -69,7 +72,20 @@ router.route('/')
     }
 
   });
-
+// router.route('/auth/google')
+//   .get('/', passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }), function(req, res) {
+//
+//   });
+  // .get('/callback', passport.authenticate('google', { failureRedirect: '/login' }),
+  // function(req, res) {
+  //   res.redirect('/');
+  // });
+// router.route('/login')
+//   .get('/auth/google', passport.authenticate('google', { scope: 'https://www.google.com/m8/feeds' });)
+//   .post('/login', passport.authenticate('local', { successRedirect: '/',
+//                                                     failureRedirect: '/login' }));)
+//
+//   })
 router.route('/trails')
   .get(function(req,res) {
 
