@@ -1,4 +1,5 @@
 # Dependency directories
+/config.js
 
 /secrets.js
 

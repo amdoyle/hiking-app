@@ -7,15 +7,20 @@ var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
-var db = new sqlite3.Database('./trail.db');
-var passport = require('../config.js');
+var trailDB = new sqlite3.Database('./trail.db');
+var userDB = new sqlite3.Database('./trail.db');
+// var passport = require('../config.js');
 // var geocoder = require('geocoder');
 
 
 
-db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
-  db.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, email TEXT)");
+trailDB.serialize(function() {
+  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
+      // db.close();
+  // db.run("DROP TABLE trail");
+});
+userDB.serialize(function() {
+  userDB.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, email TEXT)");
       // db.close();
   // db.run("DROP TABLE trail");
 });
@@ -23,9 +28,11 @@ db.serialize(function() {
 
 router.route('/')
   .get(function(req, res) {
+    console.log("/")
     return res.sendFile(path.join(__dirname + "/../views/index.html"));
   })
   .post(parseUrlencoded, function(req, res, next) {
+    console.log("post route for new trail")
     // Escaping harmful characters
     var name = escape(validator.trim(req.body.trailName));
     var inputLat = validator.trim(req.body.lat);
@@ -55,7 +62,7 @@ router.route('/')
                        + "', '" + rev + "', '" + user + "')";
 
       // telling the database to run the statment
-      db.run(sqlRequest, function(err) {
+      trailDB.run(sqlRequest, function(err) {
         if(err){
           console.log(err);
           next(err);
@@ -63,7 +70,7 @@ router.route('/')
         }
 
         res.status(201).json(newtrail);
-        console.log(newtrail);
+        // console.log(newtrail);
 
       });
 
@@ -73,13 +80,13 @@ router.route('/')
 
   });
 // router.route('/auth/google')
-//   .get('/', passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }), function(req, res) {
-//
+//   .get(passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+// router.route('/auth/google/callback')
+//   .get(passport.authenticate('google', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     console.log("auth/google/callback");
+//     res.redirect('/');
 //   });
-  // .get('/callback', passport.authenticate('google', { failureRedirect: '/login' }),
-  // function(req, res) {
-  //   res.redirect('/');
-  // });
 // router.route('/login')
 //   .get('/auth/google', passport.authenticate('google', { scope: 'https://www.google.com/m8/feeds' });)
 //   .post('/login', passport.authenticate('local', { successRedirect: '/',
@@ -89,7 +96,7 @@ router.route('/')
 router.route('/trails')
   .get(function(req,res) {
 
-      db.all("SELECT * FROM trail ORDER BY trail_name;", function(err, rows) {
+      trailDB.all("SELECT * FROM trail ORDER BY trail_name;", function(err, rows) {
         if(err != null) {
           console.log(err);
           // next(err);
@@ -112,7 +119,7 @@ router.route('/trails')
             unencodedRows.push(unencodedRow);
 
           }
-          console.log(unencodedRows);
+          // console.log(unencodedRows);
           // Sending the unencoded array to the view
           res.send(unencodedRows);
 
@@ -123,9 +130,9 @@ router.route('/trails')
 router.route('/trails/:trail')
   .get(function(req, res) {
     var trail = req.params.trail;
-    console.log(trail);
+    // console.log(trail);
 
-    db.get("SELECT trail_name, id FROM trail WHERE id = " + trail + ";", function(err,row) {
+    trailDB.get("SELECT trail_name, id FROM trail WHERE id = " + trail + ";", function(err,row) {
       if(err != null) {
         console.log(err);
         // next(err);
@@ -150,7 +157,7 @@ router.route('/find')
       lngInput = req.query.lngInput;
       distance = req.query.distance;
 
-    db.all("SELECT trail_name, lat, long FROM trail WHERE abs(lat - (" + latInput +")) < "+ distance +" AND abs(long - (" + lngInput +")) < " + distance +" ORDER BY abs(lat - (" + latInput +")), abs(long - (" + lngInput +"));", function(err, rows) {
+    trailDB.all("SELECT trail_name, lat, long FROM trail WHERE abs(lat - (" + latInput +")) < "+ distance +" AND abs(long - (" + lngInput +")) < " + distance +" ORDER BY abs(lat - (" + latInput +")), abs(long - (" + lngInput +"));", function(err, rows) {
       if(err != null) {
         console.log(err);
         // next(err);
