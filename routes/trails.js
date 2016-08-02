@@ -79,8 +79,10 @@ router.route('/')
     }
 
   });
-// router.route('/auth/google')
-//   .get(passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+router.route('/user')
+  .post(parseUrlencoded, function(req, res, next) {
+    console.log(req.body);
+  });
 // router.route('/auth/google/callback')
 //   .get(passport.authenticate('google', { failureRedirect: '/login' }),
 //   function(req, res) {

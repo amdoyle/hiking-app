@@ -207,9 +207,33 @@ $(function() {
   });
 });
 
-  function onSuccess(googleUser) {
-    console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log('Logged in as: ' + profile.getName());
+    var id_token = googleUser.getAuthResponse().id_token;
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
+    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // xhr.onload = function() {
+    //   console.log('Signed in as: ' + xhr.responseText);
+    // };
+    // xhr.send('idtoken=' + id_token);
+    $.ajax({
+      type: 'POST',
+      url: '/user',
+      accepts: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: id_token,
+      success: function(textStatus, data){
+        console.log('Signed in as: '+  data);
+      },
+      error: function(textStatus, data) {
+      }
+    }).done(function(data){});
   }
+
+
   function onFailure(error) {
     console.log(error);
   }
