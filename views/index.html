@@ -15,6 +15,7 @@
     <script type="text/javascript" src="bower_components/validator-js/validator.min.js"></script>
     <script src="js/map.js"></script>
     <script src="js/form.js"></script>
+    <script src="js/login.js"></script>
 
   </head>
 
@@ -51,10 +52,8 @@
           </ul>
         </div>
       <div>
-       <!-- <div class="g-signin2" data-onsuccess="onSignIn()"></div> -->
-      <div class="g-signin2" data-onsuccess="onSignIn"></div>
-       <a href="#" onclick="signOut()">Sign out</a>
-       <!-- <div class="g-signin2" data-width="300" data-height="200" data-longtitle="true"> -->
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <a href="#" onClick="signOut();">Sign out</a>
         <form id="add-trail" class="clearfix" name="/" action="/" method="post"
         onsubmit="return formValidation()" enctype="application/x-www-form-urlencoded" novalidate>
           <div>

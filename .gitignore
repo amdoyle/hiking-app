@@ -3,4 +3,6 @@
 
 /secrets.js
 
+/client_id.json
+
 *.db

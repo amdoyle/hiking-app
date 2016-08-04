@@ -1,4 +1,5 @@
 var express = require('express');
+
 var app = express();
 var path = require('path');
 var router = express.Router();
@@ -9,10 +10,7 @@ var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
 var trailDB = new sqlite3.Database('./trail.db');
 var userDB = new sqlite3.Database('./trail.db');
-// var passport = require('../config.js');
 // var geocoder = require('geocoder');
-
-
 
 trailDB.serialize(function() {
   trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
@@ -28,7 +26,6 @@ userDB.serialize(function() {
 
 router.route('/')
   .get(function(req, res) {
-    console.log("/")
     return res.sendFile(path.join(__dirname + "/../views/index.html"));
   })
   .post(parseUrlencoded, function(req, res, next) {
@@ -79,22 +76,16 @@ router.route('/')
     }
 
   });
-router.route('/user')
-  .post(parseUrlencoded, function(req, res, next) {
-    console.log(req.body);
+router.route('/login')
+  .get(function(req, res) {
   });
-// router.route('/auth/google/callback')
-//   .get(passport.authenticate('google', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     console.log("auth/google/callback");
-//     res.redirect('/');
-//   });
-// router.route('/login')
-//   .get('/auth/google', passport.authenticate('google', { scope: 'https://www.google.com/m8/feeds' });)
-//   .post('/login', passport.authenticate('local', { successRedirect: '/',
-//                                                     failureRedirect: '/login' }));)
-//
-//   })
+router.route('/oauthCallback')
+  .get(function(req, res) {
+  })
+router.route('/user')
+  .post(parseUrlencoded, function(req, res) {
+
+  });
 router.route('/trails')
   .get(function(req,res) {
 

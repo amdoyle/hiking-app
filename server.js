@@ -1,5 +1,6 @@
 // Require the express dependencies to help build routes
 var express = require('express');
+var Sessions = require('express-session');
 var path = require('path');
 var bodyParser = require('body-parser');
 // The var port is set to list to to the port specified in the ENV variable or on 8080
@@ -10,7 +11,13 @@ var trails = require('./routes/trails');
 // Create an express app using an instance of express
 var app = express();
 
-// app.use(sessions());
+app.use(Sessions({
+  path: '/authCallback',
+  secret: 'i luv dogs',
+  resave: true,
+  saveUninitialized: true,
+ cookie: { secure: true }
+}));
 // app.use(require('flash')());
 // app.use(function (req, res) {
 //   // flash a message
