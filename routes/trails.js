@@ -12,7 +12,7 @@ var db = new sqlite3.Database('./trail.db');
 
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, username TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY NOT NULL, trail_name TEXT NOT NULL, lat FLOAT, long FLOAT, description TEXT NOT NULL, review TEXT NOT NULL, username TEXT NOT NULL)");
       // db.close();
   // db.run("DROP TABLE trail");
 });
