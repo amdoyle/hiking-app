@@ -77,7 +77,8 @@ router.route('/')
 
   });
 router.route('/login')
-  .get(function(req, res) {
+  .post(function(req, res) {
+    console.log(req)
   });
 router.route('/oauthCallback')
   .get(function(req, res) {
