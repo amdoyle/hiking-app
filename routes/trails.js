@@ -13,13 +13,12 @@ var userDB = new sqlite3.Database('./trail.db');
 // var geocoder = require('geocoder');
 
 trailDB.serialize(function() {
-  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
+  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT NOT NULL, lat FLOAT, long FLOAT, description TEXT NOT NULL, review TEXT NOT NULL, username TEXT NOT NULL)");
       // db.close();
   // db.run("DROP TABLE trail");
 });
 userDB.serialize(function() {
   userDB.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, email TEXT)");
-      // db.close();
   // db.run("DROP TABLE trail");
 });
 
