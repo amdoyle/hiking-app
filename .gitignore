@@ -1,8 +1,10 @@
 # Dependency directories
 /config.js
 
+/node_modules
+
 /secrets.js
 
-/client_id.json
+.env
 
 *.db

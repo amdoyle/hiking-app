@@ -1,5 +1,4 @@
 var express = require('express');
-
 var app = express();
 var path = require('path');
 var router = express.Router();
@@ -10,6 +9,14 @@ var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
 var trailDB = new sqlite3.Database('./trail.db');
 var userDB = new sqlite3.Database('./trail.db');
+var google = require('../node_modules/googleapis');
+var GoogleAuth = require('../node_modules/google-auth-library');
+var authFactory = new GoogleAuth();
+var jwtDecode = require('jwt-decode');
+var clientId = require('../client_secret.json')['web']['client_id'];
+// var dotenv = require('dotenv');
+// dotenv.load();
+
 // var geocoder = require('geocoder');
 
 trailDB.serialize(function() {
@@ -75,10 +82,47 @@ router.route('/')
     }
 
   });
+
 router.route('/login')
-  .post(function(req, res) {
-    console.log(req)
-  });
+  .post(parseUrlencoded, function(req, res) {
+    authFactory.getApplicationDefault(function(err, authClient) {
+      if (err) {
+        console.log('Authentication failed because of ', err);
+        return;
+      }
+      if (authClient.createScopedRequired && authClient.createScopedRequired()) {
+        var scopes = ['accounts.google.com', 'https://accounts.google.com'];
+        authClient = authClient.createScoped(scopes);
+        var array = req.body.idtoken;
+        console.log(authClient);
+        // parseJwt(array)
+        // console.log(parseJwt(array));
+      }
+      var array = req.body.idtoken;
+      var decoded = jwtDecode(array);
+      console.log(decoded);
+
+      // if((clientId === decoded['aud']) && (decoded['iss'] == scopes) && ){
+      //
+      // }
+      // var request = {
+      //   // TODO: Change placeholders below to values for parameters to the 'get' method:
+      //
+      //   // Identifies the project addressed by this request.
+      //   project: "arboreal-harbor-138823",
+      //   // Identifies the managed zone addressed by this request. Can be the managed zone name or id.
+      //   managedZone: "http://localhost:8080",
+      //   // The identifier of the requested change, from a previous ResourceRecordSetsChangeResponse.
+      //   changeId: " ",
+      //   // Auth client
+      //   auth: authClient
+      // };
+
+
+    });
+
+});
+
 router.route('/oauthCallback')
   .get(function(req, res) {
   })

@@ -10,6 +10,7 @@ var trails = require('./routes/trails');
 
 // Create an express app using an instance of express
 var app = express();
+require('dotenv').config();
 
 app.use(Sessions({
   path: '/authCallback',

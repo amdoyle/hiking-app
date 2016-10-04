@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "body-parser": "latest",
+    "dotenv": "^2.0.0",
     "express": "latest",
+    "google-auth-library": "^0.9.8",
+    "passport": "latest",
+    "passport-google-oauth": "latest",
     "sqlite3": "latest",
-    "validator": "5.4.0",
-    "passport" : "latest",
-    "passport-google-oauth": "latest"
+    "validator": "5.4.0"
   },
   "keywords": [
     "node",
