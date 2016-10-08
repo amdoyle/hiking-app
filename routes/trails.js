@@ -15,43 +15,15 @@ var authFactory = new GoogleAuth();
 var jwtDecode = require('jwt-decode');
 var clientId = require('../client_secret.json')['web']['client_id'];
 // var dotenv = require('dotenv');
-// dotenv.load();
-
-// var geocoder = require('geocoder');
-
-trailDB.serialize(function() {
-  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT NOT NULL, lat FLOAT, long FLOAT, description TEXT NOT NULL, review TEXT NOT NULL, username TEXT NOT NULL)");
-      // db.close();
-var userDB = new sqlite3.Database('./user.db');
-var passport = require('../config.js');
-var google = require('googleapis');
-var urlshortener = google.urlshortener('v1');
-var params = { shortUrl: 'http://goo.gl/xKbRu3' };
-  // get the long url of a shortened url
-  urlshortener.url.get(params, function (err, response) {
-    if (err) {
-      console.log('Encountered error', err);
-    } else {
-      console.log('Long url is', response.longUrl);
-    }
-  });
-var plus = google.plus('v1');
-var OAuth2 = google.auth.OAuth2;
-var secrets = require('../secrets.js');
-var oauth2Client = new OAuth2(secrets.googleAuth.CLIENT_ID, secrets.googleAuth.CLIENT_SECRET, secrets.googleAuth.REDIRECT_URL);
-// var geocoder = require('geocoder');
-// var scopes = [
-//   'https://www.googleapis.com/auth/plus.me',
-// ];
 
 // *******************************************************************************//
 trailDB.serialize(function() {
   trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
-  // db.run("DROP TABLE trail");
+  // trailDB.run("DROP TABLE trail");
 });
 userDB.serialize(function() {
-  userDB.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, email TEXT)");
-  // db.run("DROP TABLE trail");
+  userDB.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT NOT NULL, email TEXT NOT NULL, auth_client TEXT NOT NULL, token_id VARCHAR(100) NOT NULL, picture_url VARCHAR(150) NOT NULL, CONSTRAINT token_id UNIQUE (id, token_id, email))");
+  // userDB.run("DROP TABLE user");
 });
 
 
@@ -114,33 +86,12 @@ router.route('/')
     }
 
   })
-router.route('/auth/google')
-  .get(passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.me']}))
-  .get('/callback',
-      passport.authenticate('google', {failureRedirect: '/auth/google'}),
-      function(req, res) {
-        console.log(req);
-        console.log(res);
-        var sqlRequest = "INSERT INTO USER (username, email)" +
-                         "VALUES ('" + res.username + "', '" + res.email + ")";
-        userDB.run(sqlRequest, function(err) {
-          if(err){
-            console.log(err);
-            next(err);
-              res.status(400).json("Sorry, something went wrong. Please try again.");
-          }
-           console.log("complete - new user")
-          // res.status(201).;
-          // console.log(newtrail);
-
-      });
-
-
-  });
 
 router.route('/login')
   .post(parseUrlencoded, function(req, res) {
+
     authFactory.getApplicationDefault(function(err, authClient) {
+
       if (err) {
         console.log('Authentication failed because of ', err);
         return;
@@ -148,22 +99,58 @@ router.route('/login')
       if (authClient.createScopedRequired && authClient.createScopedRequired()) {
         var scopes = ['accounts.google.com', 'https://accounts.google.com'];
         authClient = authClient.createScoped(scopes);
-        var array = req.body.idtoken;
-        console.log(authClient);
-        // parseJwt(array)
-        // console.log(parseJwt(array));
+        // var array = req.body.idtoken;
       }
       var array = req.body.idtoken;
       var decoded = jwtDecode(array);
-      console.log(decoded);
+      var tokenId = decoded['sub'];
+      var name = decoded['given_name'];
+      var email = decoded['email'];
+      var auth = decoded['iss']=== scopes[0] || decoded['iss'] === scopes[1] ? 'google' : false;
+      var pictureUrl = decoded['picture'];
+
+      console.log(auth);
+
+      function userExist(id) {
+        userDB.get("SELECT * FROM user WHERE token_id = " + id + " ;", function(err, row) {
+          console.log(err);
+          console.log(row);
+          console.log(id);
+        if(row == []) {
+          console.log('false');
+
+        } else {
+          console.log(row);
+        }
+      });
+    }
+
+      if(clientId === decoded['aud'] && auth === 'google' && decoded['exp'] > decoded['iat']) {
+
+          if(userExist(tokenId)){
+            console.log("user exists"); }
+          } else {
+            var sqlRequest = "INSERT INTO USER (username, email, auth_client, token_id, picture_url)" +
+                             "VALUES ('" + name + "', '" + email + "', '" + auth + "','" + tokenId +  " ', '" + pictureUrl + "')";
+
+             userDB.run(sqlRequest, function(err) {
+               if(err){
+                 console.log(err);
+                   res.status(400).json("Sorry, something went wrong. Please try again.");
+                 }
+
+               res.status(201).json(name);
+               console.log(name);
+
+            });
+          }
+
+      }
 
     });
 
 });
 
-router.route('/oauthCallback')
-  .get(function(req, res) {
-  })
 router.route('/user')
   .post(parseUrlencoded, function(req, res) {
 

@@ -3,7 +3,6 @@ var express = require('express');
 var Sessions = require('express-session');
 var path = require('path');
 var bodyParser = require('body-parser');
-var passport = require('./config');
 // The var port is set to list to to the port specified in the ENV variable or on 8080
 var port = process.env.PORT || 8080;
 var trails = require('./routes/trails');
@@ -13,13 +12,6 @@ var trails = require('./routes/trails');
 var app = express();
 require('dotenv').config();
 
-app.use(Sessions({
-  path: '/authCallback',
-  secret: 'i luv dogs',
-  resave: true,
-  saveUninitialized: true,
- cookie: { secure: true }
-}));
 // app.use(require('flash')());
 // app.use(function (req, res) {
 //   // flash a message
@@ -37,8 +29,8 @@ app.use(express.static(__dirname + "/public"));
   // app.use(express.cookieParser());
   // app.use(express.bodyParser());
   // app.use(express.session({ secret: 'keyboard cat' }));
-  app.use(passport.initialize());
-  app.use(passport.session());
+  // app.use(passport.initialize());
+  // app.use(passport.session());
   // app.use(app.router);
 
 // parse application/json
