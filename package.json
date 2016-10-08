@@ -16,8 +16,7 @@
     "dotenv": "^2.0.0",
     "express": "latest",
     "google-auth-library": "^0.9.8",
-    "passport": "latest",
-    "passport-google-oauth": "latest",
+    "googleapis": "^12.0.0",
     "sqlite3": "latest",
     "validator": "5.4.0"
   },

@@ -8,7 +8,7 @@ var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 var sqlite3 = require('../node_modules/sqlite3').verbose();
 var validator = require('validator');
 var trailDB = new sqlite3.Database('./trail.db');
-var userDB = new sqlite3.Database('./trail.db');
+var userDB = new sqlite3.Database('./user.db');
 var google = require('../node_modules/googleapis');
 var GoogleAuth = require('../node_modules/google-auth-library');
 var authFactory = new GoogleAuth();
@@ -22,6 +22,31 @@ var clientId = require('../client_secret.json')['web']['client_id'];
 trailDB.serialize(function() {
   trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT NOT NULL, lat FLOAT, long FLOAT, description TEXT NOT NULL, review TEXT NOT NULL, username TEXT NOT NULL)");
       // db.close();
+var userDB = new sqlite3.Database('./user.db');
+var passport = require('../config.js');
+var google = require('googleapis');
+var urlshortener = google.urlshortener('v1');
+var params = { shortUrl: 'http://goo.gl/xKbRu3' };
+  // get the long url of a shortened url
+  urlshortener.url.get(params, function (err, response) {
+    if (err) {
+      console.log('Encountered error', err);
+    } else {
+      console.log('Long url is', response.longUrl);
+    }
+  });
+var plus = google.plus('v1');
+var OAuth2 = google.auth.OAuth2;
+var secrets = require('../secrets.js');
+var oauth2Client = new OAuth2(secrets.googleAuth.CLIENT_ID, secrets.googleAuth.CLIENT_SECRET, secrets.googleAuth.REDIRECT_URL);
+// var geocoder = require('geocoder');
+// var scopes = [
+//   'https://www.googleapis.com/auth/plus.me',
+// ];
+
+// *******************************************************************************//
+trailDB.serialize(function() {
+  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
   // db.run("DROP TABLE trail");
 });
 userDB.serialize(function() {
@@ -29,6 +54,13 @@ userDB.serialize(function() {
   // db.run("DROP TABLE trail");
 });
 
+
+// function isLoggedIn(req, res, next) {
+//   if(req.isAuthenticated()){
+//     return next();
+//   }
+//   return res.redirect('/');
+// }
 
 router.route('/')
   .get(function(req, res) {
@@ -81,6 +113,29 @@ router.route('/')
       res.status(400).json('Invalid input. Please try again.');
     }
 
+  })
+router.route('/auth/google')
+  .get(passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.me']}))
+  .get('/callback',
+      passport.authenticate('google', {failureRedirect: '/auth/google'}),
+      function(req, res) {
+        console.log(req);
+        console.log(res);
+        var sqlRequest = "INSERT INTO USER (username, email)" +
+                         "VALUES ('" + res.username + "', '" + res.email + ")";
+        userDB.run(sqlRequest, function(err) {
+          if(err){
+            console.log(err);
+            next(err);
+              res.status(400).json("Sorry, something went wrong. Please try again.");
+          }
+           console.log("complete - new user")
+          // res.status(201).;
+          // console.log(newtrail);
+
+      });
+
+
   });
 
 router.route('/login')
@@ -101,23 +156,6 @@ router.route('/login')
       var array = req.body.idtoken;
       var decoded = jwtDecode(array);
       console.log(decoded);
-
-      // if((clientId === decoded['aud']) && (decoded['iss'] == scopes) && ){
-      //
-      // }
-      // var request = {
-      //   // TODO: Change placeholders below to values for parameters to the 'get' method:
-      //
-      //   // Identifies the project addressed by this request.
-      //   project: "arboreal-harbor-138823",
-      //   // Identifies the managed zone addressed by this request. Can be the managed zone name or id.
-      //   managedZone: "http://localhost:8080",
-      //   // The identifier of the requested change, from a previous ResourceRecordSetsChangeResponse.
-      //   changeId: " ",
-      //   // Auth client
-      //   auth: authClient
-      // };
-
 
     });
 
