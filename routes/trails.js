@@ -18,7 +18,7 @@ var clientId = require('../client_secret.json')['web']['client_id'];
 
 // *******************************************************************************//
 trailDB.serialize(function() {
-  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT, user_id INTEGER)");
+  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, user_id int REFERENCES user(id), trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT)");
   // trailDB.run("DROP TABLE trail");
 });
 userDB.serialize(function() {
@@ -39,14 +39,15 @@ router.route('/')
   return res.sendFile(path.join(__dirname + "/../views/index.html"));
 })
 .post(parseUrlencoded, function(req, res, next) {
-  console.log("post route for new trail")
+  console.log("post route for new trail");
+    console.log(req.body);
   // Escaping harmful characters
   var name = escape(validator.trim(req.body.trailName));
   var inputLat = validator.trim(req.body.lat);
   var inputLong = validator.trim(req.body.long);
   var descrip = escape(validator.trim(req.body.description));
   var rev = escape(validator.trim(req.body.review));
-  var user = validator.trim(req.body.username);
+  var user = validator.trim(req.body.user_id);
 
 
   //setting the object to be returned
@@ -105,7 +106,7 @@ router.route('/login')
     var tokenId = escape(validator.trim(decoded['sub']));
     var name = escape(validator.trim(decoded['given_name']));
     var email = escape(validator.trim(decoded['email']));
-    var auth = decoded['iss']=== scopes[0] || decoded['iss'] === scopes[1] ? 'google' : false;
+    var auth = decoded['iss'] === scopes[0] || decoded['iss'] === scopes[1] ? 'google' : false;
     var pictureUrl = escape(validator.trim(decoded['picture']));
 
     if(clientId === decoded['aud'] && auth === 'google' && decoded['exp'] > decoded['iat']) {
@@ -121,10 +122,10 @@ router.route('/login')
             }
 
             res.status(201).json(name);
-            //  console.log(name);
+
           });
         } else {
-          console.log("Welcom back!");
+          console.log("Welcome back " + unescape(row.username) + "!");
         }
 
       });
@@ -172,12 +173,11 @@ router.route('/trails')
 router.route('/trails/:trail')
 .get(function(req, res) {
   var trail = req.params.trail;
-  // console.log(trail);
 
   trailDB.get("SELECT trail_name, id FROM trail WHERE id = " + trail + ";", function(err,row) {
     if(err != null) {
       console.log(err);
-      // next(err);
+
     } else {
       var unencodedRow = {
         trail_name: unescape(row.trail_name),
