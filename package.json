@@ -1,6 +1,9 @@
 {
   "name": "hiking-app",
   "version": "1.0.0",
+  "engines": {
+   "node": "8.1.4"
+ }
   "description": "The code respository for a community based hiking app.",
   "main": "server.js",
   "scripts": {
@@ -18,7 +21,11 @@
     "google-auth-library": "^0.9.8",
     "googleapis": "^12.0.0",
     "sqlite3": "latest",
-    "validator": "5.4.0"
+    "validator": "5.4.0",
+    "fs": "latest",
+    "jwt-decode": "latest",
+    "express-session": "latest",
+    "client-sessions": "latest"
   },
   "keywords": [
     "node",

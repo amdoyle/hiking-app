@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var session = require('express-session');
 var path = require('path');
 var router = express.Router();
 var fs = require('fs');
@@ -18,7 +19,7 @@ var clientId = require('../client_secret.json')['web']['client_id'];
 
 // *******************************************************************************//
 trailDB.serialize(function() {
-  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, user_id int REFERENCES user(id), trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT)");
+  trailDB.run("CREATE TABLE IF NOT EXISTS trail (id INTEGER PRIMARY KEY, user_id int REFERENCES user(id), username TEXT NOT NULL, trail_name TEXT, lat FLOAT, long FLOAT, description TEXT, review TEXT)");
   // trailDB.run("DROP TABLE trail");
 });
 userDB.serialize(function() {
@@ -26,48 +27,49 @@ userDB.serialize(function() {
   // userDB.run("DROP TABLE user");
 });
 
-
-// function isLoggedIn(req, res, next) {
-//   if(req.isAuthenticated()){
-//     return next();
-//   }
-//   return res.redirect('/');
-// }
+// middleware needs to come before the routes that use them
+app.use(session({
+  name: 'server-session-cookie-id',
+  secret: 'my express secret',
+  saveUninitialized: true,
+  resave: false,
+  cookie: { secure: !true }
+}));
 
 router.route('/')
 .get(function(req, res) {
   return res.sendFile(path.join(__dirname + "/../views/index.html"));
 })
 .post(parseUrlencoded, function(req, res, next) {
-  console.log("post route for new trail");
-    console.log(req.body);
   // Escaping harmful characters
   var name = escape(validator.trim(req.body.trailName));
   var inputLat = validator.trim(req.body.lat);
   var inputLong = validator.trim(req.body.long);
   var descrip = escape(validator.trim(req.body.description));
   var rev = escape(validator.trim(req.body.review));
-  var user = validator.trim(req.body.user_id);
+  var userId = escape(req.session.userId);
+  var username = escape(req.allthecookies.user);
 
 
+console.log("allthecookies:" + req.allthecookies.currentUser + " " + req.allthecookies.currentUserId);
   //setting the object to be returned
   var newtrail = {
     trail_name: name,
     description: descrip,
     review: rev,
-    username: user,
     lat: inputLat,
-    long: inputLong
+    long: inputLong,
+    userId: userId,
+    username: username
   }
 
   //  Checking to ensure that all paramaters meet the validations before saving
-  if(validator.isAlphanumeric(user) && validator.isAscii(name, descrip, rev)
-  && validator.isFloat(inputLat) && validator.isFloat(inputLat) &&
-  !validator.isNull(user, name, descrip, rev, inputLong, inputLat))  {
+  if(validator.isAscii(name, descrip, rev)
+  && validator.isFloat(inputLat) && validator.isFloat(inputLat))  {
     // SQL statment to input the info
-    var sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, username)" +
+    var sqlRequest = "INSERT INTO TRAIL (trail_name, lat, long, description, review, user_id, username )" +
     "VALUES ('" + name + "', '" + inputLat + "', '" + inputLong + "', '" + descrip
-    + "', '" + rev + "', '" + user + "')";
+    + "', '" + rev + "', '" + userId + "','" + username + "')";
 
     // telling the database to run the statment
     trailDB.run(sqlRequest, function(err) {
@@ -78,7 +80,6 @@ router.route('/')
       }
 
       res.status(201).json(newtrail);
-      // console.log(newtrail);
 
     });
 
@@ -97,10 +98,12 @@ router.route('/login')
       console.log('Authentication failed because of ', err);
       return;
     }
+
     if (authClient.createScopedRequired && authClient.createScopedRequired()) {
       var scopes = ['accounts.google.com', 'https://accounts.google.com'];
       authClient = authClient.createScoped(scopes);
     }
+
     var array = req.body.idtoken;
     var decoded = jwtDecode(array);
     var tokenId = escape(validator.trim(decoded['sub']));
@@ -110,7 +113,16 @@ router.route('/login')
     var pictureUrl = escape(validator.trim(decoded['picture']));
 
     if(clientId === decoded['aud'] && auth === 'google' && decoded['exp'] > decoded['iat']) {
-      userDB.get("SELECT * FROM user WHERE token_id =" + "'" + tokenId + "'" + ";", function(err, row) {
+
+      // var sqlStatment = 'SELECT username FROM user WHERE token_id = ' + tokenId + ';';
+      var sqlStatment = 'SELECT username, token_id FROM user WHERE token_id = ' + '"' + tokenId + '"' + ';';
+
+      userDB.get(sqlStatment, function(err, row) {
+
+        if(err) {
+          console.log("Error:" + err);
+        }
+
         if(row === null) {
           var sqlRequest = "INSERT INTO USER (username, email, auth_client, token_id, picture_url)" +
           "VALUES ('" + name + "', '" + email + "', '" + auth + "','" + tokenId +  "', '" + pictureUrl + "')";
@@ -120,24 +132,44 @@ router.route('/login')
               console.log(err);
               res.status(400).json("Sorry, something went wrong. Please try again.");
             }
-
+            console.log("welcome newuser!");
+            sess = req.session;
+            sess.user = name;
             res.status(201).json(name);
-
           });
+
         } else {
-          console.log("Welcome back " + unescape(row.username) + "!");
+          console.log(req.session);
+          res.redirect('/');
         }
 
       });
+
     }
+
   });
-});
-router.route('/user')
-.post(parseUrlencoded, function(req, res) {
 
 });
+
+app.get('/logout',function(req,res){
+    req.allthecookies.reset();
+    res.redirect('/');
+});
+
 router.route('/trails')
 .get(function(req,res) {
+
+  function getUserName(rowID){
+    console.log(rowID);
+    userDB.get('SELECT username FROM user WHERE id = '+ rowID + ';', function(err,row) {
+      if(err != null) {
+        console.log(err);
+      } else {
+        // console.log(unescape(row.username));
+        return unescape(row.username);
+      }
+    });
+  }
 
   trailDB.all("SELECT * FROM trail ORDER BY trail_name;", function(err, rows) {
     if(err != null) {
@@ -154,15 +186,16 @@ router.route('/trails')
           trail_name: unescape(rows[row].trail_name),
           description: unescape(rows[row].description),
           review: unescape(rows[row].review),
-          username: unescape(rows[row].username),
+          username: rows[row].username,
           lat: rows[row].lat,
           long: rows[row].long
         }
+
+        console.log(unencodedRow);
         //Each row will be push in to the new array
         unencodedRows.push(unencodedRow);
 
       }
-      // console.log(unencodedRows);
       // Sending the unencoded array to the view
       res.send(unencodedRows);
 
